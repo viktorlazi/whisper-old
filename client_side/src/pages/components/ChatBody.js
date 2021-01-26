@@ -26,9 +26,6 @@ function ChatBody() {
       </div>
       <div className="chat_meat">
         <p className="chat_message">
-          <span className="chat_name">
-          Name
-          </span>
           Message
           <span className="chat_timestamp">
           timestamp
