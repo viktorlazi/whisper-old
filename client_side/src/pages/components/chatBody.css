@@ -1,7 +1,7 @@
 .chat_body{
   display:flex;
-  flex-direction: column;
   flex:0.85;
+<<<<<<< HEAD
 }
 .chat_meat{
   display:flex;
@@ -76,4 +76,6 @@
 .chat_footer > .MuiScgIcon-root{
 padding:10px;
 color:grey;
+=======
+>>>>>>> parent of 5da858f... chat presentable
 }

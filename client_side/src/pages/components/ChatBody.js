@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, {useState} from 'react'
 import {Avatar, IconButton} from '@material-ui/core'
 import WhatshotIcon from '@material-ui/icons/Whatshot';
@@ -13,9 +14,13 @@ function ChatBody({messages}) {
     //axios
     setInput("")
   }
+=======
+import React from 'react'
+>>>>>>> parent of 5da858f... chat presentable
 
   return (
     <div className="chat_body">
+<<<<<<< HEAD
       <div className="chat_header">
         <div className="chat_headerInfo">
           <h3>username</h3>
@@ -43,6 +48,9 @@ function ChatBody({messages}) {
           <button onClick={sendMessage}>Send a message</button>
         </form>
       </div>
+=======
+      
+>>>>>>> parent of 5da858f... chat presentable
     </div>
   )
 }
