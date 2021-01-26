@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Avatar, IconButton} from '@material-ui/core'
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import BlockIcon from '@material-ui/icons/Block';
@@ -6,7 +6,14 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import './chatBody.css'
 import Message from './Message'
 
-function ChatBody() {
+function ChatBody({messages}) {
+  const[input, setInput] = useState("")
+  const sendMessage = async(e)=>{
+    e.preventDefault();
+    //axios
+    setInput("")
+  }
+
   return (
     <div className="chat_body">
       <div className="chat_header">
@@ -32,8 +39,8 @@ function ChatBody() {
       
       <div className="chat_footer">
         <form>
-          <input placeholder="Type a message" type="text" />
-          <button>Send a message</button>
+          <input value={input} onChange={e=>setInput(e.target.value)} placeholder="Type a message" type="text" />
+          <button onClick={sendMessage}>Send a message</button>
         </form>
       </div>
     </div>
