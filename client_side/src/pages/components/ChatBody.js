@@ -4,6 +4,7 @@ import WhatshotIcon from '@material-ui/icons/Whatshot';
 import BlockIcon from '@material-ui/icons/Block';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import './chatBody.css'
+import Message from './Message'
 
 function ChatBody() {
   return (
@@ -25,13 +26,10 @@ function ChatBody() {
         </div>
       </div>
       <div className="chat_meat">
-        <p className="chat_message">
-          Message
-          <span className="chat_timestamp">
-          timestamp
-          </span>
-        </p>
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+        <Message message="krac" timestamp="10:20" receiver={false}/>
       </div>
+      
       <div className="chat_footer">
         <form>
           <input placeholder="Type a message" type="text" />
