@@ -1,6 +1,6 @@
 import React from 'react'
 import Contact from './Contact'
-import DonutLargeIcon from '@material-ui/icons/DonutLarge';
+import WhatshotIcon from '@material-ui/icons/WhatshotOutlined';
 import ChatIcon from '@material-ui/icons/Chat';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Avatar, IconButton} from '@material-ui/core'
@@ -15,10 +15,7 @@ function Sidebar() {
         <Avatar/>
         <div className="sidebar_headerRight">
           <IconButton>
-            <DonutLargeIcon/>
-          </IconButton>
-          <IconButton>
-              <ChatIcon/>
+            <WhatshotIcon/>
           </IconButton>
           <IconButton>
               <MoreVertIcon/>

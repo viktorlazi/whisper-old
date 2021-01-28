@@ -9,11 +9,12 @@
   display:flex;
   justify-content: space-between;
   padding: 20px;
+  align-items: center;
   border-right: 1px solid lightgray;
 }
 .sidebar_headerRight{
   display:flex;
-  justify-content: space-between;
+  justify-content:flex-end;
   min-width: 10vw;
 }
 

@@ -1,7 +1,7 @@
 
 import React, {useState} from 'react'
 import {Avatar, IconButton} from '@material-ui/core'
-import WhatshotIcon from '@material-ui/icons/Whatshot';
+import WhatshotIcon from '@material-ui/icons/WhatshotOutlined';
 import BlockIcon from '@material-ui/icons/Block';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import './chatBody.css'
