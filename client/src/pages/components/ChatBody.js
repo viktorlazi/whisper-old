@@ -35,7 +35,25 @@ function ChatBody({messages}) {
       </div>
       <div className="chat_meat">
         <Message message="krac" timestamp="10:20" receiver={true}/>
+
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+
+        <Message message="krac" timestamp="10:20" receiver={true}/>
         <Message message="krac" timestamp="10:20" receiver={false}/>
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+
+
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+        <Message message="krac" timestamp="10:20" receiver={true}/>
+
       </div>
       
       <div className="chat_footer">
