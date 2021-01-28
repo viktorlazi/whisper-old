@@ -15,6 +15,5 @@ const connection_url = ''
 // api routes
 app.get('/', (req, res)=>res.status(200).send('hello world'))
 
-
 // listen
 app.listen(port, ()=>console.log(`Listening on localhost:${port}`))
