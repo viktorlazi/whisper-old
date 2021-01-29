@@ -2,7 +2,8 @@ import * as io from "socket.io"
 import express from 'express'; 
 import {createServer} from 'http'; 
 import cors from 'cors'
-import mongo_password from './mongo_pass'
+import mongo_pass from './mongo_pass.js'
+import mongodb from 'mongodb'
 
 const app = express();  
 const server = createServer(app); 
@@ -10,12 +11,11 @@ app.use(cors())
 const socketio = new io.Server(server);  
 
 //mongo
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://admin:"+ mongo_password +"@cluster0.lkgyy.mongodb.net/whisper?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
+const MongoClient = mongodb.MongoClient;
+const uri = "mongodb+srv://admin:"+ mongo_pass +"@cluster0.lkgyy.mongodb.net/whisper?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true , useUnifiedTopology:true});
 client.connect(err => {
   const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
   client.close();
 });
 
