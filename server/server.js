@@ -1,19 +1,25 @@
-import express from 'express'
-import cors from 'cors'
+import * as io from "socket.io" 
+import express from 'express'; 
+import {createServer} from 'http'; 
 
-// app config
-const app = express()
-const port = process.env.PORT || 9000
+const app = express();  
+const server = createServer(app);  
+const socketio = new io.Server(server);  
 
-// middleware
-app.use(express.json())
-app.use(cors())
+socketio.on('connection', (socket)=>{
+  console.log('user connected')
+})
 
-// DB config
-const connection_url = ''
+server.listen(4000, ()=>{
+  console.log('listening on 4000')
+})
 
-// api routes
-app.get('/', (req, res)=>res.status(200).send('hello world'))
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
 
-// listen
-app.listen(port, ()=>console.log(`Listening on localhost:${port}`))
+io.on('connection', (socket) => {
+  socket.on('chat message', (msg) => {
+    socket.broadcast.emit('chat message', msg)
+  });
+});
