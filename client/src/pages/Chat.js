@@ -5,7 +5,6 @@ import Sidebar from './components/Sidebar'
 import io from 'socket.io-client'
 
 const socket = io('http://localhost:4000')
-console.log(socket)
 
 export default function Chat() {
   const [addressToken, setAdressToken] = useState(1)
@@ -13,8 +12,8 @@ export default function Chat() {
   if(addressToken){
     return (
       <div className="chat">
-        <Sidebar/>
-        <ChatBody/>
+        <Sidebar addressToken={addressToken}/>
+        <ChatBody addressToken={addressToken}/>
       </div>
     )
   }
