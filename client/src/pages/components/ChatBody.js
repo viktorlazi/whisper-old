@@ -8,6 +8,18 @@ import './chatBody.css'
 import Message from './Message'
 
 function ChatBody({addressToken, socket}) {
+  const [messages, setMessages] = useState([
+    {
+      message:'sadfsad',
+      timestamp:'sutra',
+      reciever:'false'
+    },
+    {
+      message:'sadfsad',
+      timestamp:'sutra',
+      reciever:'false'
+    }
+  ])
   const[input, setInput] = useState("")
   const sendMessage = async(e)=>{
     e.preventDefault();
@@ -42,26 +54,16 @@ function ChatBody({addressToken, socket}) {
         </div>
       </div>
       <div className="chat_meat">
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-        <Message message="krac" timestamp="10:20" receiver={false}/>
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-
-
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-        <Message message="krac" timestamp="10:20" receiver={true}/>
-
+        {
+          messages.map(
+            (msg) =>{
+              return <Message 
+                message={msg.message}
+                timestamp={msg.timestamp}
+                reciever={msg.reciever}/>
+            }
+          )
+        }
       </div>
       
       <div className="chat_footer">
