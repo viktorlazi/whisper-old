@@ -12,21 +12,31 @@ function ChatBody({addressToken, socket}) {
     {
       message:'sadfsad',
       timestamp:'sutra',
-      reciever:'false'
+      receiver:false
     },
     {
       message:'sadfsad',
       timestamp:'sutra',
-      reciever:'false'
+      receiver:true
     }
   ])
   const[input, setInput] = useState("")
+
+  const addMessageToState = (msg, time, receiver) =>{
+    setMessages([...messages, {
+      message:msg,
+      timestamp:time,
+      receiver:receiver
+    }])
+  }
   const sendMessage = async(e)=>{
     e.preventDefault();
-    //axios
-
-    socket.emit('chat message', input)
-    setInput("")
+    if(input !== ""){
+      //axios
+      addMessageToState(input, 'now', true)
+      socket.emit('chat message', input)
+      setInput("")
+    }
   }
   
   useEffect(() => {
@@ -60,7 +70,7 @@ function ChatBody({addressToken, socket}) {
               return <Message 
                 message={msg.message}
                 timestamp={msg.timestamp}
-                reciever={msg.reciever}/>
+                receiver={msg.receiver}/>
             }
           )
         }
