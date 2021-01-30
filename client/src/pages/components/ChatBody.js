@@ -1,5 +1,5 @@
 
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Avatar, IconButton} from '@material-ui/core'
 import WhatshotIcon from '@material-ui/icons/WhatshotOutlined';
 import BlockIcon from '@material-ui/icons/Block';
@@ -7,13 +7,21 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import './chatBody.css'
 import Message from './Message'
 
-function ChatBody({messages}) {
+function ChatBody({addressToken, socket}) {
   const[input, setInput] = useState("")
   const sendMessage = async(e)=>{
     e.preventDefault();
     //axios
+
+    socket.emit('chat message', input)
     setInput("")
   }
+  
+  useEffect(() => {
+    socket.on("chat message", msg => {
+      alert(msg)
+    });
+  }, []);
 
   return (
     <div className="chat_body">

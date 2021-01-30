@@ -12,8 +12,8 @@ export default function Chat() {
   if(addressToken){
     return (
       <div className="chat">
-        <Sidebar addressToken={addressToken}/>
-        <ChatBody addressToken={addressToken}/>
+        <Sidebar addressToken={addressToken} socket={socket}/>
+        <ChatBody addressToken={addressToken} socket={socket}/>
       </div>
     )
   }

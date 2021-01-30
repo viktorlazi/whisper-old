@@ -5,8 +5,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Avatar, IconButton} from '@material-ui/core'
 import './sidebar.css'
 
-
-function Sidebar({addressToken}) {
+function Sidebar({addressToken, socket}) {
 
   return (
     <div className="sidebar">

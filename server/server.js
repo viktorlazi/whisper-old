@@ -29,6 +29,8 @@ server.listen(4000, ()=>{
 
 socketio.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
-    socket.broadcast.emit('chat message', msg)
+    console.log(msg)
+    socket.emit('chat message', msg)
   });
 });
+
