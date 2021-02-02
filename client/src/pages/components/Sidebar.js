@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Contact from './Contact'
 import WhatshotIcon from '@material-ui/icons/WhatshotOutlined';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -6,6 +6,7 @@ import {Avatar, IconButton} from '@material-ui/core'
 import './sidebar.css'
 
 function Sidebar({addressToken, socket}) {
+  const [contacts, setContacts] = useState();
 
   return (
     <div className="sidebar">
@@ -21,11 +22,6 @@ function Sidebar({addressToken, socket}) {
         </div>
       </div>
       <div className="sidebar_chats">
-        <Contact/>
-        <Contact/>
-        <Contact/>
-        <Contact/>
-        <Contact/>
         <Contact/>
       </div>
       <div className="sidebar_add_new">
