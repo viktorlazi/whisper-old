@@ -7,6 +7,8 @@ import mongoose from 'mongoose'
 import message_schema from './models/message_schema.js'
 import user_schema from './models/user_schema.js'
 
+import bcrypt from 'bcrypt'
+
 const app = express();  
 const server = createServer(app); 
 app.use(cors())
@@ -14,8 +16,21 @@ app.use(express.json())
 const socketio = new io.Server(server);  
 
 app.post('/api/register', async (req, res) =>{
-  console.log(req.body)
-  res.sendStatus(200);
+  try{
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)
+    user_schema.create({
+      username: req.body.username,
+      password: hashedPassword
+    }, (err, data) =>{
+      if(err){
+        res.status(500).send(err)
+      }else{
+        res.status(201).send(data)
+      }
+    })
+  }catch{
+
+  }
 })
 
 //mongo
