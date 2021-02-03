@@ -5,11 +5,18 @@ import cors from 'cors'
 import mongo_pass from './mongo_pass.js'
 import mongoose from 'mongoose'
 import message_schema from './models/message_schema.js'
+import user_schema from './models/user_schema.js'
 
 const app = express();  
 const server = createServer(app); 
 app.use(cors())
+app.use(express.json())
 const socketio = new io.Server(server);  
+
+app.post('/api/register', async (req, res) =>{
+  console.log(req.body)
+  res.sendStatus(200);
+})
 
 //mongo
 const connection_url = "mongodb+srv://admin:"+ mongo_pass +"@cluster0.lkgyy.mongodb.net/whisper?retryWrites=true&w=majority";
@@ -18,31 +25,18 @@ mongoose.connect(connection_url, {
   useNewUrlParser:true,
   useUnifiedTopology:true
 })
-const db = mongoose.connection; db.once('open', ()=>{ 
+const db = mongoose.connection; 
+db.once('open', ()=>{ 
   console.log('succesful db connection')
-  /* database stuff */
-  
- 
 })
 
-socketio.on('connection', async (socket)=>{
-  console.log('user connected')
-  const test = {
-    message:"poruka",
-    name:"ime",
-    timestamp:"sada"
-  }
-
-  const response = await message_schema.create(test)
-  console.log(response)
-  
-})
-
-server.listen(4000, ()=>{
-  console.log('listening on 4000')
-})
 socketio.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     console.log(msg)
   });
 });
+
+
+server.listen(4000, ()=>{
+  console.log('listening on 4000')
+})
