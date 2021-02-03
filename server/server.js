@@ -3,8 +3,8 @@ import express from 'express';
 import {createServer} from 'http'; 
 import cors from 'cors'
 import mongo_pass from './mongo_pass.js'
-import mongodb from 'mongodb'
 import mongoose from 'mongoose'
+import message_schema from './models/message_schema.js'
 
 const app = express();  
 const server = createServer(app); 
@@ -18,23 +18,31 @@ mongoose.connect(connection_url, {
   useNewUrlParser:true,
   useUnifiedTopology:true
 })
-const db = mongoose.connection;
-db.once('open', ()=>{
+const db = mongoose.connection; db.once('open', ()=>{ 
   console.log('succesful db connection')
   /* database stuff */
+  
+ 
 })
 
-socketio.on('connection', (socket)=>{
+socketio.on('connection', async (socket)=>{
   console.log('user connected')
+  const test = {
+    message:"poruka",
+    name:"ime",
+    timestamp:"sada"
+  }
+
+  const response = await message_schema.create(test)
+  console.log(response)
+  
 })
 
 server.listen(4000, ()=>{
   console.log('listening on 4000')
 })
-
 socketio.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     console.log(msg)
   });
 });
-
