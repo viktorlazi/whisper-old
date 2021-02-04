@@ -6,6 +6,7 @@ import mongo_pass from './mongo_pass.js'
 import mongoose from 'mongoose'
 import {add_user} from './register.js'
 import {login_user} from './login.js'
+import LoginToken from './models/LoginToken.js'
 
 const app = express();  
 const server = createServer(app); 
@@ -37,7 +38,13 @@ app.post('/api/register', async (req, res) =>{
   add_user(req.body).then(result=>res.send(result))
 })
 app.post('/api/login', async (req, res) =>{
-  login_user(req.body).then(result => res.send(result))
+  login_user(req.body)
+  .then(result => {
+    res.send(result)
+    LoginToken.create({
+      token:result.data
+    })
+  })
 })
 
 server.listen(4000, ()=>{
