@@ -23,10 +23,12 @@ mongoose.connect(connection_url, {
 })
 const db = mongoose.connection; 
 db.once('open', ()=>{ 
-  console.log('succesful db connection')
+  
 })
 
 socketio.on('connection', (socket) => {
+  console.log('povezan')
+  console.log(socket.handshake.auth.token)
   socket.on('chat message', (msg) => {
     console.log(msg)
   });
@@ -38,10 +40,9 @@ app.post('/api/register', async (req, res) =>{
 })
 
 app.post('/api/login', async (req, res) =>{
-  login_user(req.body)
-  .then(result => {res.send(result)})
+  res.send(await login_user(req.body))
 })
 
 server.listen(4000, ()=>{
-  console.log('listening on 4000')
+  
 })

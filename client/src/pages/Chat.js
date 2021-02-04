@@ -3,7 +3,6 @@ import './chat.css'
 import ChatBody from './components/ChatBody'
 import Sidebar from './components/Sidebar'
 import io from 'socket.io-client'
-import axios from 'axios'
 
 export default function Chat() {
   const [addressToken, setAdressToken] = useState(1)
@@ -14,9 +13,7 @@ export default function Chat() {
     auth: {
       token:1
     }
-  })
-
-  
+  })  
   if(addressToken){
     return (
       <div className="chat">

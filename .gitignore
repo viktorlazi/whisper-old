@@ -13,6 +13,7 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 mongo_pass.js
+todo
 
 # Mono auto generated files
 mono_crash.*
