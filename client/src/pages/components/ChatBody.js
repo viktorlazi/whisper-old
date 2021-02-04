@@ -32,7 +32,6 @@ function ChatBody({addressToken, socket}) {
   const sendMessage = async(e)=>{
     e.preventDefault();
     if(input !== ""){
-      //axios
       addMessageToState(input, 'now', true)
       socket.emit('chat message', input)
       setInput("")

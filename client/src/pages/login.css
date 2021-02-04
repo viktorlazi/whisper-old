@@ -1,8 +1,7 @@
 .login{
   display:flex;
-  align-items: center;
   justify-content: center;
-  margin-top:-30vh;
+  margin-top:25vh;
 }
 
 .login form > input[type="submit"]{
@@ -12,4 +11,13 @@
 
 .login form > input{
   padding: 5px;
+}
+
+.login form button{
+  display:none;
+}
+
+.login form p:last-child{
+  color:red;
+  font-size:12px;
 }
