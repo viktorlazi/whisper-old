@@ -4,10 +4,9 @@ import {createServer} from 'http';
 import cors from 'cors'
 import mongo_pass from './mongo_pass.js'
 import mongoose from 'mongoose'
-import message_schema from './models/message_schema.js'
-import user_schema from './models/user_schema.js'
+import passport from 'passport'
 
-import bcrypt from 'bcrypt'
+import {add_user} from './register.js'
 
 const app = express();  
 const server = createServer(app); 
@@ -15,23 +14,6 @@ app.use(cors())
 app.use(express.json())
 const socketio = new io.Server(server);  
 
-app.post('/api/register', async (req, res) =>{
-  try{
-    const hashedPassword = await bcrypt.hash(req.body.password, 10)
-    user_schema.create({
-      username: req.body.username,
-      password: hashedPassword
-    }, (err, data) =>{
-      if(err){
-        res.status(500).send(err)
-      }else{
-        res.status(201).send(data)
-      }
-    })
-  }catch{
-
-  }
-})
 
 //mongo
 const connection_url = "mongodb+srv://admin:"+ mongo_pass +"@cluster0.lkgyy.mongodb.net/whisper?retryWrites=true&w=majority";
@@ -51,6 +33,14 @@ socketio.on('connection', (socket) => {
   });
 });
 
+//post get
+app.post('/api/register', async (req, res) =>{
+  try{
+    console.log(await add_user(req.body))
+  }catch{
+    console.log('failed')
+  }
+})
 
 server.listen(4000, ()=>{
   console.log('listening on 4000')
