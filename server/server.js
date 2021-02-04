@@ -35,11 +35,7 @@ socketio.on('connection', (socket) => {
 
 //post get
 app.post('/api/register', async (req, res) =>{
-  try{
-    console.log(await add_user(req.body))
-  }catch{
-    console.log('failed')
-  }
+  add_user(req.body).then(result=>res.send(result))
 })
 
 server.listen(4000, ()=>{
