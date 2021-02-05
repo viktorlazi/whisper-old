@@ -7,7 +7,8 @@ import {Avatar, IconButton} from '@material-ui/core'
 import './sidebar.css'
 
 function Sidebar({socket}) {
-  const [contacts, setContacts] = useState();
+  const [contacts, set_contacts] = useState();
+  const [newContact, setNewContact] = useState();
   const history = useHistory();
   const logout = async (e)=>{
     e.preventDefault()
@@ -22,6 +23,11 @@ function Sidebar({socket}) {
     })
     .catch(err => console.log(err))
     history.push('/login')
+  }
+  const addContact = (e) =>{
+    e.preventDefault()
+    setNewContact('')
+    socket.emit('new contact', newContact)
   }
   return (
     <div className="sidebar">
@@ -39,12 +45,12 @@ function Sidebar({socket}) {
       <div className="sidebar_chats">
         <Contact/>
       </div>
-      <div className="sidebar_add_new">
+      <form className="sidebar_add_new">
         <p>+Add new</p>
-        <input type="text"></input>
-        <p id="addNewMessage"></p>
-        <button type="submit"></button>
-      </div>
+        <input value={newContact} onChange={e=>setNewContact(e.target.value)} type="text"></input>
+        <p id="addContactMessage"></p>
+        <button id="addContact" type="submit" onClick={addContact}></button>
+      </form>
       <div class="sidebar_logout">
         <button id="logout" type="submit" onClick={logout}>Log out</button>
       </div>
