@@ -30,3 +30,15 @@ export const login_user = async(body)=>{
   }
   return {status:'error', error:'invalid username/password'}
 }
+
+export const logout_user = async(body)=>{
+  const user_token = await LoginToken.deleteOne({'token':body.token})
+  .then(
+    ()=> {return {status:'ok'}}
+  ).catch(
+    ()=>{
+      return {status:'error', error:'not even logged in'}
+    }
+  )
+
+}

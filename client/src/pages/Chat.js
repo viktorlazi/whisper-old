@@ -5,20 +5,21 @@ import Sidebar from './components/Sidebar'
 import io from 'socket.io-client'
 
 export default function Chat() {
-  const socket = io('http://localhost:4000', {
+  if(sessionStorage.getItem('user_token')){
+    const socket = io('http://127.0.0.1:4000', {
     auth: {
       token:sessionStorage.getItem('user_token')
-    }
-  })  
-  if(sessionStorage.getItem('user_token')){
+      }
+    })  
     return (
       <div className="chat">
-        <Sidebar addressToken={sessionStorage.getItem('user_token')} socket={socket}/>
-        <ChatBody addressToken={sessionStorage.getItem('user_token')} socket={socket}/>
+        <Sidebar socket={socket}/>
+        <ChatBody socket={socket}/>
       </div>
     )
+  }else{
+    return(
+      <div>Please log in</div>
+    )
   }
-  return(
-    <div>Please log in</div>
-  )
 }

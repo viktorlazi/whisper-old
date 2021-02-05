@@ -8,18 +8,7 @@ import './chatBody.css'
 import Message from './Message'
 
 function ChatBody({addressToken, socket}) {
-  const [messages, setMessages] = useState([
-    {
-      message:'sadfsad',
-      timestamp:'sutra',
-      receiver:false
-    },
-    {
-      message:'sadfsad',
-      timestamp:'sutra',
-      receiver:true
-    }
-  ])
+  const [messages, setMessages] = useState([])
   const[input, setInput] = useState("")
 
   const addMessageToState = (msg, time, receiver) =>{
@@ -42,7 +31,7 @@ function ChatBody({addressToken, socket}) {
     socket.on("chat message", msg => {
       alert(msg)
     });
-  }, []);
+  }, [socket]);
 
   return (
     <div className="chat_body">
