@@ -5,12 +5,9 @@ import Sidebar from './components/Sidebar'
 import io from 'socket.io-client'
 
 export default function Chat() {
-  useEffect(() => {
-    console.log(sessionStorage.getItem('user_token'))
-  }, [])
   const socket = io('http://localhost:4000', {
     auth: {
-      token:1
+      token:sessionStorage.getItem('user_token')
     }
   })  
   if(sessionStorage.getItem('user_token')){

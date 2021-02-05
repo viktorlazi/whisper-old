@@ -6,6 +6,7 @@ import mongo_pass from './mongo_pass.js'
 import mongoose from 'mongoose'
 import {add_user} from './register.js'
 import {login_user} from './login.js'
+import token from './models/LoginToken.js'
 
 const app = express();  
 const server = createServer(app); 
@@ -25,9 +26,11 @@ db.once('open', ()=>{
   
 })
 
-socketio.on('connection', (socket) => {
-  console.log('povezan')
-  console.log(socket.handshake.auth.token)
+socketio.on('connection', async (socket) => {
+  const username = (await token.findOne(
+    {token:socket.handshake.auth.token}
+  ).lean()).for
+  console.log(username)
   socket.on('chat message', (msg) => {
     console.log(msg)
   });
