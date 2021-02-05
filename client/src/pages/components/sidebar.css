@@ -36,3 +36,12 @@
 .sidebar_add_new > button{
   display:none;
 }
+
+.sidebar_logout{
+  display:block;
+
+}
+#logout{
+  padding:10px;
+  margin-left:5px;
+}

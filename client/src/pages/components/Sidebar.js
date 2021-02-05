@@ -42,10 +42,11 @@ function Sidebar({socket}) {
       <div className="sidebar_add_new">
         <p>+Add new</p>
         <input type="text"></input>
+        <p id="addNewMessage"></p>
         <button type="submit"></button>
       </div>
-      <div>
-        <button type="submit" onClick={logout}>Log out</button>
+      <div class="sidebar_logout">
+        <button id="logout" type="submit" onClick={logout}>Log out</button>
       </div>
     </div>
   )
