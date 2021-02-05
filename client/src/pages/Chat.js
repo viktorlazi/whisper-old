@@ -5,20 +5,19 @@ import Sidebar from './components/Sidebar'
 import io from 'socket.io-client'
 
 export default function Chat() {
-  const [addressToken, setAdressToken] = useState(1)
   useEffect(() => {
-    setAdressToken(localStorage.getItem('user_token'))
+    console.log(sessionStorage.getItem('user_token'))
   }, [])
   const socket = io('http://localhost:4000', {
     auth: {
       token:1
     }
   })  
-  if(addressToken){
+  if(sessionStorage.getItem('user_token')){
     return (
       <div className="chat">
-        <Sidebar addressToken={addressToken} socket={socket}/>
-        <ChatBody addressToken={addressToken} socket={socket}/>
+        <Sidebar addressToken={sessionStorage.getItem('user_token')} socket={socket}/>
+        <ChatBody addressToken={sessionStorage.getItem('user_token')} socket={socket}/>
       </div>
     )
   }

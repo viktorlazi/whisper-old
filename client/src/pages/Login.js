@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import './login.css'
+import {useHistory} from 'react-router-dom'
 
 export default function Login() {
+  const history = useHistory();
   const[username, setUsername]=useState('')
   const[password, setPassword]=useState('')
   const[errorMessage, setErrorMessage]=useState('')
@@ -18,15 +20,18 @@ export default function Login() {
         "Content-Type": "application/json"
       }
     })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(
       result => {
-        sessionStorage.setItem('user_token', result.token)
-        console.log(result)
+        if(result.status === 'ok'){
+          sessionStorage.setItem('user_token', result.token)
+          history.push('/chat')
+        }else{
+          setErrorMessage(result.error)
+        }
       }
     )
     .catch(err => console.log(err))}
-
 
   return (
     <div className="login">

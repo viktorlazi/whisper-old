@@ -13,7 +13,6 @@ app.use(cors())
 app.use(express.json())
 const socketio = new io.Server(server);  
 
-
 //mongo
 const connection_url = "mongodb+srv://admin:"+ mongo_pass +"@cluster0.lkgyy.mongodb.net/whisper?retryWrites=true&w=majority";
 mongoose.connect(connection_url, {

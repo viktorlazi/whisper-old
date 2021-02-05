@@ -26,7 +26,7 @@ export const login_user = async(body)=>{
       token:token,
       for:body.username
     })
-    return {status:'ok', data:token}
+    return {status:'ok', token:token}
   }
   return {status:'error', error:'invalid username/password'}
 }
