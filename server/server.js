@@ -7,6 +7,7 @@ import mongoose from 'mongoose'
 import {add_user} from './register.js'
 import {login_user, logout_user} from './login.js'
 import token from './models/LoginToken.js'
+import User from './models/User.js'
 
 const app = express();  
 const server = createServer(app); 
@@ -33,6 +34,14 @@ socketio.on('connection', async (socket) => {
 
   socket.on('chat message', (msg) => {
     console.log(msg)
+  });
+
+  socket.on('new contact', async (new_contact) => {
+    const details = await User.findOne({'username':new_contact}).lean()
+    console.log(details)
+    if(details){
+      socket.emit('contact approved', details._id)
+    }
   });
 });
 

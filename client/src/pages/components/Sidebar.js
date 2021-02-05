@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {useHistory} from 'react-router-dom'
 import Contact from './Contact'
 import WhatshotIcon from '@material-ui/icons/WhatshotOutlined';
@@ -29,6 +29,11 @@ function Sidebar({socket}) {
     setNewContact('')
     socket.emit('new contact', newContact)
   }
+  useEffect(() => {
+    socket.on('contact approved', contactDetails=>{
+      alert('postoji')
+    })
+  }, [socket])
   return (
     <div className="sidebar">
       <div className="sidebar_header">
