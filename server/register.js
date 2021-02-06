@@ -10,7 +10,8 @@ export const add_user = async(body)=>{
       const hashedPassword = await bcrypt.hash(body.password, 10)
       User.create({
         "username":body.username,
-        "password":hashedPassword
+        "password":hashedPassword,
+        "contacts":''
       })
       return 'succesful'
     }else{

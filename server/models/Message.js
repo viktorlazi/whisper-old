@@ -2,7 +2,8 @@ import mongoose from 'mongoose'
 
 const message_schema = new mongoose.Schema({
   message:String,
-  name:String,
+  from:String,
+  to:String,
   timestamp:String
 })
 

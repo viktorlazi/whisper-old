@@ -24,25 +24,34 @@ mongoose.connect(connection_url, {
 })
 const db = mongoose.connection; 
 db.once('open', ()=>{ 
-  
+  console.log('db connected')
 })
 
 socketio.on('connection', async (socket) => {
-  const username = (await token.findOne(
+  console.log('trying to connect')
+  const callerToken = (await token.findOne(
     {token:socket.handshake.auth.token}
   ).lean())
 
-  socket.on('chat message', (msg) => {
-    console.log(msg)
-  });
+  if(callerToken){
+    console.log('token approved')
+    const caller = await User.findOne({'username':callerToken.for})
+    console.log('caller: ' + callerToken.for)
+    console.log('caller obj: ' + caller)
+    
+    socket.on('new contact', async (new_contact) => {
+      const details = await User.findOne({'username':new_contact})
+      console.log(new_contact)
+      if(details){
+        User.updateOne({_id:caller._id}, {
+          contacts:[...caller.contacts, details.username]
+        }).exec()
+        socket.emit('contact approved', [...caller.contacts, details.username])
+        
+      }
+    });
+  }
 
-  socket.on('new contact', async (new_contact) => {
-    const details = await User.findOne({'username':new_contact}).lean()
-    console.log(details)
-    if(details){
-      socket.emit('contact approved', details._id)
-    }
-  });
 });
 
 //post get

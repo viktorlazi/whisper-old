@@ -31,7 +31,7 @@ function Sidebar({socket}) {
   }
   useEffect(() => {
     socket.on('contact approved', contactDetails=>{
-      alert('postoji')
+      alert(contactDetails)
     })
   }, [socket])
   return (
