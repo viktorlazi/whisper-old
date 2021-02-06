@@ -6,7 +6,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Avatar, IconButton} from '@material-ui/core'
 import './sidebar.css'
 
-function Sidebar({socket}) {
+function Sidebar({socket, activeChat, changeActive}) {
   const [contacts, setContacts] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [newContact, setNewContact] = useState('');
@@ -27,7 +27,7 @@ function Sidebar({socket}) {
   }
   const addContact = async (e) =>{
     e.preventDefault()
-    if(newContact != ''){
+    if(newContact !== ''){
       socket.emit('new contact', newContact)
       setNewContact('')
     }
@@ -48,6 +48,10 @@ function Sidebar({socket}) {
     })
   }, [socket])
 
+  const activate=(e)=>{
+    changeActive(e)
+  }
+
   return (
     <div className="sidebar">
       <div className="sidebar_header">
@@ -57,14 +61,17 @@ function Sidebar({socket}) {
             <WhatshotIcon/>
           </IconButton>
           <IconButton>
-              <MoreVertIcon/>
+            <MoreVertIcon/>
           </IconButton>
         </div>
       </div>
       <div className="sidebar_chats">
         {
           contacts.map((contact)=>{
-            return <Contact contacts={contact} key={contact.name}/>
+            return <Contact contacts={contact} 
+            active={activeChat===contact.name}
+            activate = {(e)=>{activate(e)}}
+            key={contact.name}/>
           })
         }
       </div>

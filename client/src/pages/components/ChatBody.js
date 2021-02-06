@@ -7,7 +7,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import './chatBody.css'
 import Message from './Message'
 
-function ChatBody({addressToken, socket}) {
+function ChatBody({socket, activeChat}) {
   const [messages, setMessages] = useState([])
   const[input, setInput] = useState("")
 
@@ -37,7 +37,7 @@ function ChatBody({addressToken, socket}) {
     <div className="chat_body">
       <div className="chat_header">
         <div className="chat_headerInfo">
-          <h3>username</h3>
+          <h2>{activeChat}</h2>
         </div>
         <div className="chat_headerRight">
           <IconButton>

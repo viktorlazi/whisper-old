@@ -6,13 +6,18 @@
   align-items: center;
   padding-right: 15px;
 }
+.contact:hover, .contact.active{
+  background-color: lightgray;
+}
 .contact_left{
   display:flex;
   flex-direction: column;
 }
-.contact_left > h2{
+.contact_left > h4{
   font-weight: 500;
-  font-size: 24px;
   padding: 2px;
   margin:0;
+}
+.contact_left > p{
+  margin:5px 0;
 }
