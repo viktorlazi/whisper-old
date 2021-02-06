@@ -48,3 +48,8 @@
   padding:10px;
   margin-left:5px;
 }
+
+#add_contact_error_message{
+  color:red;
+  font-size:12px;
+}

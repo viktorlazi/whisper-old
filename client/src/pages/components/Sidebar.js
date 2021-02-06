@@ -8,6 +8,7 @@ import './sidebar.css'
 
 function Sidebar({socket}) {
   const [contacts, setContacts] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
   const [newContact, setNewContact] = useState('');
   const history = useHistory();
   const logout = async (e)=>{
@@ -34,9 +35,16 @@ function Sidebar({socket}) {
   const addContactToState = (con)=>{
     setContacts(contacts=>[...contacts, con]);
   }
+  const errorOnAddContact = (msg)=>{
+    setErrorMessage(msg)
+  }
   useEffect(() => {
     socket.on('contact approved', contactDetails=>{
       addContactToState(contactDetails);
+      setErrorMessage('')
+    })
+    socket.on('contact nonexistent', contactDetails=>{
+      errorOnAddContact('user non existent');
     })
   }, [socket])
 
@@ -63,7 +71,7 @@ function Sidebar({socket}) {
       <form className="sidebar_add_new">
         <p>+Add contact [Enter]</p>
         <input value={newContact} onChange={e=>setNewContact(e.target.value)} type="text"></input>
-        <p id="addContactMessage"></p>
+        <p id="add_contact_error_message">{errorMessage}</p>
         <button id="addContact" type="submit" onClick={addContact}></button>
       </form>
       <div className="sidebar_logout">
