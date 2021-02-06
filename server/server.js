@@ -34,11 +34,7 @@ socketio.on('connection', async (socket) => {
   ).lean())
 
   if(callerToken){
-    console.log('token approved')
     const caller = await User.findOne({'username':callerToken.for})
-    console.log('caller: ' + callerToken.for)
-    console.log('caller obj: ' + caller)
-    
     socket.on('new contact', async (new_contact) => {
       const details = await User.findOne({'username':new_contact})
       console.log(new_contact)
@@ -46,8 +42,7 @@ socketio.on('connection', async (socket) => {
         User.updateOne({_id:caller._id}, {
           contacts:[...caller.contacts, details.username]
         }).exec()
-        socket.emit('contact approved', [...caller.contacts, details.username])
-        
+        await socket.emit('contact approved', [...caller.contacts, details.username])
       }
     });
   }

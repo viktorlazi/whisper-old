@@ -7,8 +7,8 @@ import {Avatar, IconButton} from '@material-ui/core'
 import './sidebar.css'
 
 function Sidebar({socket}) {
-  const [contacts, set_contacts] = useState();
-  const [newContact, setNewContact] = useState();
+  const [contacts, setContacts] = useState(['sd']);
+  const [newContact, setNewContact] = useState('');
   const history = useHistory();
   const logout = async (e)=>{
     e.preventDefault()
@@ -31,9 +31,13 @@ function Sidebar({socket}) {
   }
   useEffect(() => {
     socket.on('contact approved', contactDetails=>{
-      alert(contactDetails)
+      addContactToState(contactDetails);
     })
   }, [socket])
+  const addContactToState = (con)=>{
+    setContacts([...con]);
+  }
+
   return (
     <div className="sidebar">
       <div className="sidebar_header">
@@ -48,15 +52,19 @@ function Sidebar({socket}) {
         </div>
       </div>
       <div className="sidebar_chats">
-        <Contact/>
+        {
+          contacts.map((contact)=>{
+            return <Contact name={contact}/>
+          })
+        }
       </div>
       <form className="sidebar_add_new">
-        <p>+Add new</p>
+        <p>+Add contact [Enter]</p>
         <input value={newContact} onChange={e=>setNewContact(e.target.value)} type="text"></input>
         <p id="addContactMessage"></p>
         <button id="addContact" type="submit" onClick={addContact}></button>
       </form>
-      <div class="sidebar_logout">
+      <div className="sidebar_logout">
         <button id="logout" type="submit" onClick={logout}>Log out</button>
       </div>
     </div>
