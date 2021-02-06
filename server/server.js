@@ -40,9 +40,9 @@ socketio.on('connection', async (socket) => {
       console.log(new_contact)
       if(details){
         User.updateOne({_id:caller._id}, {
-          contacts:[...caller.contacts, details.username]
+          contacts:[...caller.contacts, {name:details.username, last:'Say hello...'}]
         }).exec()
-        await socket.emit('contact approved', [...caller.contacts, details.username])
+        await socket.emit('contact approved', {name:details.username, last:'Say hello...'})
       }
     });
   }

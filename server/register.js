@@ -11,7 +11,7 @@ export const add_user = async(body)=>{
       User.create({
         "username":body.username,
         "password":hashedPassword,
-        "contacts":''
+        "contacts":[{}]
       })
       return 'succesful'
     }else{
