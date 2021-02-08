@@ -12,9 +12,9 @@ function Sidebar({socket, activeChat, changeActive}) {
   const [newContact, setNewContact] = useState('');
   const history = useHistory();
   
-  const logout = async (e)=>{
+  const logout = (e)=>{
     e.preventDefault()
-    await fetch("http://localhost:4000/api/logout",{
+    fetch("http://localhost:4000/api/logout",{
       method: 'POST',
       body:JSON.stringify({
         token:sessionStorage.getItem('user_token')
@@ -43,6 +43,10 @@ function Sidebar({socket, activeChat, changeActive}) {
   useEffect(() => {
     socket.on('contact approved', contactDetails=>{
       addContactToState(contactDetails);
+      sessionStorage.setItem('user_contacts',
+        JSON.stringify(
+          [...JSON.parse(sessionStorage.getItem('user_contacts')), contactDetails]
+      ))
       setErrorMessage('')
     })
     socket.on('contact nonexistent', ()=>{
