@@ -28,13 +28,14 @@ db.once('open', ()=>{
 })
 
 socketio.on('connection', async (socket) => {
-  console.log('trying to connect')
   const callerToken = (await token.findOne(
     {token:socket.handshake.auth.token}
   ).lean())
-
   if(callerToken){
     const caller = await User.findOne({'username':callerToken.for})
+    //from here ok to communicate with client
+    
+
     socket.on('new contact', async (new_contact) => {
       const details = await User.findOne({'username':new_contact})
       if(details){

@@ -11,6 +11,7 @@ function Sidebar({socket, activeChat, changeActive}) {
   const [errorMessage, setErrorMessage] = useState('');
   const [newContact, setNewContact] = useState('');
   const history = useHistory();
+  
   const logout = async (e)=>{
     e.preventDefault()
     await fetch("http://localhost:4000/api/logout",{
@@ -23,6 +24,7 @@ function Sidebar({socket, activeChat, changeActive}) {
       }
     })
     .catch(err => console.log(err))
+    sessionStorage.clear();
     history.push('/login')
   }
   const addContact = async (e) =>{
@@ -43,7 +45,7 @@ function Sidebar({socket, activeChat, changeActive}) {
       addContactToState(contactDetails);
       setErrorMessage('')
     })
-    socket.on('contact nonexistent', contactDetails=>{
+    socket.on('contact nonexistent', ()=>{
       errorOnAddContact('user non existent');
     })
   }, [socket])
@@ -51,6 +53,13 @@ function Sidebar({socket, activeChat, changeActive}) {
   const activate=(e)=>{
     changeActive(e)
   }
+
+  useEffect(() =>{
+    console.log(
+      sessionStorage.getItem('user_contacts')
+    )
+    setContacts(JSON.parse(sessionStorage.getItem('user_contacts')))
+  }, [])
 
   return (
     <div className="sidebar">

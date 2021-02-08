@@ -6,12 +6,13 @@ import io from 'socket.io-client'
 
 export default function Chat() {
   const [activeChat, setActiveChat]=useState();
+
   if(sessionStorage.getItem('user_token')){
     const socket = io('http://127.0.0.1:4000', {
     auth: {
       token:sessionStorage.getItem('user_token')
       }
-    })  
+    })
     socket.on('contact approved', (contact)=>{
       setActiveChat(contact.name)
     })

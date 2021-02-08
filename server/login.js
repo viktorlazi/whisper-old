@@ -26,13 +26,14 @@ export const login_user = async(body)=>{
       token:token,
       for:body.username
     })
-    return {status:'ok', token:token}
+    console.log([...user.contacts])
+    return {status:'ok', token:token, contacts:[...user.contacts]}
   }
   return {status:'error', error:'invalid username/password'}
 }
 
 export const logout_user = async(body)=>{
-  const user_token = await LoginToken.deleteOne({'token':body.token})
+  LoginToken.deleteOne({'token':body.token}).exec()
   .then(
     ()=> {return {status:'ok'}}
   ).catch(
