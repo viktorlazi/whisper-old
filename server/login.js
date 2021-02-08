@@ -40,5 +40,4 @@ export const logout_user = async(body)=>{
       return {status:'error', error:'not even logged in'}
     }
   )
-
 }

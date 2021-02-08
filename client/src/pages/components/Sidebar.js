@@ -52,6 +52,9 @@ function Sidebar({socket, activeChat, changeActive}) {
     socket.on('contact nonexistent', ()=>{
       errorOnAddContact('user non existent');
     })
+    socket.on('contact already added', ()=>{
+      errorOnAddContact('already added');
+    })
   }, [socket])
 
   const activate=(e)=>{

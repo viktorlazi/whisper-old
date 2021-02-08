@@ -17,11 +17,13 @@
   padding:20px;
 }
 .chat_headerInfo{
+  display:flex;
+  align-items: center;
   flex:1;
   padding-left: 20px; 
 }
-.chat_headerInfo > h3{
-  margin:5px;
+.chat_headerInfo > h2{
+  margin:5px 10px;
   font-weight: 500;
 }
 .chat_headerInfo > p{
@@ -29,8 +31,6 @@
 }
 .chat_meat{
   flex:1;
-  /*background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-  */
   background-color: #f3f3f3;
   background-repeat:repeat;
   background-position: center;

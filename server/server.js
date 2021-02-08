@@ -39,11 +39,16 @@ socketio.on('connection', async (socket) => {
     socket.on('new contact', async (new_contact) => {
       const details = await User.findOne({'username':new_contact})
       if(details){
-        User.updateOne({_id:caller._id}, {
-          contacts:[...caller.contacts, {name:details.username, last:'Say hello...'}]
-        }).exec()
-        socket.emit('contact approved', {name:details.username, last:'Say hello...'})
-      }else{
+        if(!caller.contacts.find(e=>e.name===new_contact)){
+          User.updateOne({_id:caller._id}, {
+            contacts:[...caller.contacts, {name:details.username, last:'Say hello...'}]
+          }).exec()
+          socket.emit('contact approved', {name:details.username, last:'Say hello...'})
+        }else{
+          socket.emit('contact already added')
+        }
+      }
+      else{
         socket.emit('contact nonexistent')
       }
     });
@@ -59,6 +64,12 @@ app.post('/api/login', async (req, res) =>{
 })
 app.post('/api/logout', async (req, res) =>{
   res.send(await logout_user(req.body))
+})
+app.get('/api/logout_everyone', async (req, res)=>{
+  token.deleteMany().then(()=>{
+    console.log('everyone logged out')
+  })
+  res.sendStatus(200)
 })
 
 server.listen(4000, ()=>{
