@@ -52,6 +52,8 @@ socketio.on('connection', async (socket) => {
         socket.emit('contact nonexistent')
       }
     });
+  }else{
+    socket.emit('not logged in')
   }
 });
 
@@ -67,7 +69,7 @@ app.post('/api/logout', async (req, res) =>{
 })
 app.get('/api/logout_everyone', async (req, res)=>{
   token.deleteMany().then(()=>{
-    console.log('everyone logged out')
+    socketio.emit('not logged in')
   })
   res.sendStatus(200)
 })
