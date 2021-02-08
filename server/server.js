@@ -40,9 +40,9 @@ socketio.on('connection', async (socket) => {
       const details = await User.findOne({'username':new_contact})
       if(details){
         User.updateOne({_id:caller._id}, {
-          contacts:[...caller.contacts, {name:details.username, last:'Say hello...'}]
+          contacts:[...caller.contacts, {name:details.username, last:'Say hello...', _id:Math.random()}]
         }).exec()
-        socket.emit('contact approved', {name:details.username, last:'Say hello...'})
+        socket.emit('contact approved', {name:details.username, last:'Say hello...', _id:Math.random()})
       }else{
         socket.emit('contact nonexistent')
       }

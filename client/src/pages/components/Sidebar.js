@@ -80,7 +80,7 @@ function Sidebar({socket, activeChat, changeActive}) {
             return <Contact contacts={contact} 
             active={activeChat===contact.name}
             activate = {(e)=>{activate(e)}}
-            key={contact.name}/>
+            key={contact._id}/>
           })
         }
       </div>
