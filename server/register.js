@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 
 export const add_user = async(body)=>{
   if(await User.findOne({'username':body.username}, (err,data)=>{})){
-    return 'username exists'
+    return {error:'username exists'}
   }else{
     if(pass_validation(body.password)){
       const hashedPassword = await bcrypt.hash(body.password, 10)
@@ -13,9 +13,9 @@ export const add_user = async(body)=>{
         "password":hashedPassword,
         "contacts":[]
       })
-      return 'succesful'
+      return {status:'ok'}
     }else{
-      return 'password too short'
+      return {error:'unsuccesful'}
     }
   }
 }

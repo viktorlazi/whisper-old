@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react'
-import './login.css'
+import React, {useState} from 'react'
 import {useHistory} from 'react-router-dom'
+import './login.css'
 
 export default function Login() {
   const history = useHistory();
@@ -38,7 +38,7 @@ export default function Login() {
   return (
     <div className="login">
       <form>
-        <h1>Login please</h1>
+        <h1>Login</h1>
         <p>username:</p>
         <input value={username} onChange={e=>setUsername(e.target.value)} type="text" />
         <p>password:</p>
