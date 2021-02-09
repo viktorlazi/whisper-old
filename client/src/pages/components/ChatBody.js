@@ -26,6 +26,10 @@ function ChatBody({socket, activeChat}) {
       setInput("")
     }
   }
+  const burnContact = () =>{
+    socket.emit('burn contact', activeChat)
+    
+  }
   
   useEffect(() => {
     socket.on("chat message", msg => {
@@ -42,7 +46,7 @@ function ChatBody({socket, activeChat}) {
             <h2>{activeChat}</h2>
           </div>
           <div className="chat_headerRight">
-            <IconButton>
+            <IconButton onClick={burnContact}>
               <WhatshotIcon/>
             </IconButton>
             <IconButton>

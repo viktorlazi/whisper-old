@@ -34,8 +34,6 @@ socketio.on('connection', async (socket) => {
   if(callerToken){
     const caller = await User.findOne({'username':callerToken.for})
     //from here it's ok to communicate with client
-    
-
     socket.on('new contact', async (new_contact) => {
       const details = await User.findOne({'username':new_contact})
       if(details){
@@ -51,7 +49,21 @@ socketio.on('connection', async (socket) => {
       else{
         socket.emit('contact nonexistent')
       }
-    });
+    }
+    );
+    socket.on('block contact', async (username) => {
+      const details = await User.findOne({'username':new_contact})
+      if(details){
+        
+      }
+    })
+    socket.on('burn contact', async (username) => {
+      User.updateOne({_id:caller.id}, {
+        contacts:caller.contacts.filter(e=>{
+          return e.name!=username
+        })
+      }).exec()
+    })
   }else{
     socket.emit('not logged in')
   }
