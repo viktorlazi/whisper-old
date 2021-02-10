@@ -7,7 +7,7 @@ import './chatBody.css'
 import Message from './Message'
 import NoChat from './NoChat'
 
-function ChatBody({socket, activeChat}) {
+function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   const [messages, setMessages] = useState([])
   const[input, setInput] = useState("")
 
@@ -28,6 +28,10 @@ function ChatBody({socket, activeChat}) {
   }
   const burnContact = () =>{
     socket.emit('burn contact', activeChat)
+    closeChat()
+    setContacts(contacts=>contacts.filter(e=>{
+      return e.name!=activeChat
+    }))
   }
   if(activeChat){
     return (

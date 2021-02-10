@@ -35,6 +35,7 @@ export default function Chat() {
         <ChatBody 
           socket={socket} 
           activeChat={activeChat}
+          closeChat={()=>{setActiveChat(null)}}
           contacts={contacts}
           setContacts={setContacts}/>
       </div>
