@@ -30,12 +30,6 @@ function ChatBody({socket, activeChat}) {
     socket.emit('burn contact', activeChat)
     
   }
-  
-  useEffect(() => {
-    socket.on("chat message", msg => {
-      alert(msg)
-    });
-  }, [socket]);
 
   if(activeChat){
     return (

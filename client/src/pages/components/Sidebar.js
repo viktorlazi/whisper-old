@@ -6,8 +6,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Avatar, IconButton} from '@material-ui/core'
 import './sidebar.css'
 
-function Sidebar({socket, activeChat, changeActive}) {
-  const [contacts, setContacts] = useState([]);
+function Sidebar({socket, activeChat, changeActive, contacts, setContacts}) {
   const [errorMessage, setErrorMessage] = useState('');
   const [newContact, setNewContact] = useState('');
   const history = useHistory();
@@ -30,43 +29,23 @@ function Sidebar({socket, activeChat, changeActive}) {
   const addContact = async (e) =>{
     e.preventDefault()
     if(newContact !== ''){
-      socket.emit('new contact', newContact)
-      setNewContact('')
+      if(!contacts.find(e=>e.name===newContact)){
+        socket.emit('new contact', newContact)
+        setNewContact('')
+      }else{
+        setErrorMessage('already added')
+      }
     }
-  }
-  const addContactToState = (con)=>{
-    setContacts(contacts=>[...contacts, con]);
-  }
-  const errorOnAddContact = (msg)=>{
-    setErrorMessage(msg)
   }
   useEffect(() => {
     socket.on('contact approved', contactDetails=>{
-      addContactToState(contactDetails);
-      sessionStorage.setItem('user_contacts',
-        JSON.stringify(
-          [...JSON.parse(sessionStorage.getItem('user_contacts')), contactDetails]
-      ))
+      setContacts([...contacts, contactDetails]);
       setErrorMessage('')
     })
     socket.on('contact nonexistent', ()=>{
-      errorOnAddContact('user non existent');
-    })
-    socket.on('contact already added', ()=>{
-      errorOnAddContact('already added');
+      setErrorMessage('user non existent');
     })
   }, [socket])
-
-  const activate=(e)=>{
-    changeActive(e)
-  }
-
-  useEffect(() =>{
-    console.log(
-      sessionStorage.getItem('user_contacts')
-    )
-    setContacts(JSON.parse(sessionStorage.getItem('user_contacts')))
-  }, [])
 
   return (
     <div className="sidebar">
@@ -86,7 +65,7 @@ function Sidebar({socket, activeChat, changeActive}) {
           contacts.map((contact)=>{
             return <Contact contacts={contact} 
             active={activeChat===contact.name}
-            activate = {(e)=>{activate(e)}}
+            activate = {changeActive}
             key={Math.random()}/>
           })
         }

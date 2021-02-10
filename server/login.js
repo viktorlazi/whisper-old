@@ -26,7 +26,7 @@ export const login_user = async(body)=>{
       token:token,
       for:body.username
     })
-    return {status:'ok', token:token, contacts:[...user.contacts]}
+    return {status:'ok', token:token}// contacts:[...user.contacts]}
   }
   return {status:'error', error:'invalid username/password'}
 }

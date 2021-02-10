@@ -6,7 +6,8 @@ import Sidebar from './components/Sidebar'
 import io from 'socket.io-client'
 
 export default function Chat() {
-  const [activeChat, setActiveChat]=useState();
+  const [activeChat, setActiveChat]=useState()
+  const [contacts, setContacts]=useState([])
   const history = useHistory();
 
   if(sessionStorage.getItem('user_token')){
@@ -15,17 +16,21 @@ export default function Chat() {
       token:sessionStorage.getItem('user_token')
       }
     })
-    socket.on('contact approved', (contact)=>{
-      setActiveChat(contact.name)
-    })
     socket.on('not logged in', ()=>{
       sessionStorage.clear()
       history.push('/login')
     })
     return (
       <div className="chat">
-        <Sidebar socket={socket} activeChat={activeChat} changeActive={(name)=>setActiveChat(name)} />
-        <ChatBody socket={socket} activeChat={activeChat}/>
+        <Sidebar 
+          socket={socket} 
+          activeChat={activeChat} 
+          changeActive={(name)=>setActiveChat(name)} 
+          contacts={contacts}
+          setContacts={setContacts}/>
+        <ChatBody 
+          socket={socket} 
+          activeChat={activeChat}/>
       </div>
     )
   }else{

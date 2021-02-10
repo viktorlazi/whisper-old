@@ -35,16 +35,15 @@ socketio.on('connection', async (socket) => {
     const caller = await User.findOne({'username':callerToken.for})
     //from here it's ok to communicate with client
     socket.on('new contact', async (new_contact) => {
+      console.log("alo")
       const details = await User.findOne({'username':new_contact})
       if(details){
         if(!caller.contacts.find(e=>e.name===new_contact)){
           User.updateOne({_id:caller._id}, {
             contacts:[...caller.contacts, {name:details.username, last:'Say hello...'}]
           }).exec()
-          socket.emit('contact approved', {name:details.username, last:'Say hello...'})
-        }else{
-          socket.emit('contact already added')
         }
+        socket.emit('contact approved', {name:details.username, last:'Say hello...'})
       }
       else{
         socket.emit('contact nonexistent')

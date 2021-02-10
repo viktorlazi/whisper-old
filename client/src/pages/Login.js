@@ -24,9 +24,7 @@ export default function Login() {
     .then(
       result => {
         if(result.status === 'ok'){
-          console.log([...result.contacts])
           sessionStorage.setItem('user_token', result.token)
-          sessionStorage.setItem('user_contacts', JSON.stringify(result.contacts))
           history.push('/chat')
         }else{
           setErrorMessage(result.error)
