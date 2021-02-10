@@ -39,7 +39,6 @@ function Sidebar({socket, activeChat, changeActive, contacts, setContacts}) {
   }
   useEffect(() => {
     socket.on('contact list', (list)=>{
-      console.log(list)
       setContacts(list)
     })
     socket.on('contact approved', contactDetails=>{

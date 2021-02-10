@@ -21,9 +21,6 @@ export default function Chat() {
       sessionStorage.clear()
       history.push('/login')
     })
-    socket.on('disconnect', function () {
-      socket.removeAllListeners();
-    }); 
     return (
       <div className="chat">
         <Sidebar 

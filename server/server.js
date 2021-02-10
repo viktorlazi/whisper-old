@@ -24,7 +24,6 @@ mongoose.connect(connection_url, {
 })
 const db = mongoose.connection; 
 db.once('open', ()=>{ 
-  console.log('db connected')
 })
 
 socketio.on('connection', async (socket) => {
@@ -44,7 +43,6 @@ socketio.on('connection', async (socket) => {
     })   
     socket.on('get contact list', ()=>{
       socket.emit('contact list', caller.contacts)
-      console.log('alo')
     })
     socket.on('new contact', async (new_contact) => {
       const details = await User.findOne({'username':new_contact})
