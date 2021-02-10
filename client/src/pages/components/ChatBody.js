@@ -33,6 +33,9 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
       return e.name!=activeChat
     }))
   }
+  const blockContact = () =>{
+    socket.emit('block contact', activeChat)
+  }
   if(activeChat){
     return (
       <div className="chat_body">
@@ -45,7 +48,7 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
             <IconButton onClick={burnContact}>
               <WhatshotIcon/>
             </IconButton>
-            <IconButton>
+            <IconButton onClick={blockContact}>
               <BlockIcon/>
             </IconButton>
           </div>

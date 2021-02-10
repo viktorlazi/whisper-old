@@ -34,6 +34,14 @@ socketio.on('connection', async (socket) => {
   if(callerToken){
     //from here it's ok to communicate with client
     const caller = await User.findOne({'username':callerToken.for})
+    
+    socket.on('block contact', (contact)=>{
+      if(!caller.blocked.find(e=>e.name===contact)){
+        User.updateOne({_id:caller._id}, {
+          contacts:[...caller.blocked, contact]
+        }).exec()
+      }
+    })   
     socket.on('get contact list', ()=>{
       socket.emit('contact list', caller.contacts)
       console.log('alo')
