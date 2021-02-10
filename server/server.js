@@ -37,10 +37,10 @@ socketio.on('connection', async (socket) => {
     socket.on('block contact', (contact)=>{
       if(!caller.blocked.find(e=>e.name===contact)){
         User.updateOne({_id:caller._id}, {
-          contacts:[...caller.blocked, contact]
+          blocked:[...caller.blocked, contact]
         }).exec()
       }
-    })   
+    })
     socket.on('get contact list', ()=>{
       socket.emit('contact list', caller.contacts)
     })
@@ -59,12 +59,6 @@ socketio.on('connection', async (socket) => {
       }
     }
     );
-    socket.on('block contact', async (username) => {
-      const details = await User.findOne({'username':new_contact})
-      if(details){
-        
-      }
-    })
     socket.on('burn contact', async (username) => {
       User.updateOne({_id:caller.id}, {
         contacts:caller.contacts.filter(e=>{
