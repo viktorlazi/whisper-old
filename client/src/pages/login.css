@@ -21,3 +21,7 @@
   color:red;
   font-size:12px;
 }
+
+h1 > p{
+  cursor:pointer;
+}

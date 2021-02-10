@@ -44,7 +44,7 @@ export default function Register() {
   return (
     <div className="login">
       <form method="post" action="http://localhost:4000/api/register">
-        <h1>Register</h1>
+        <h1>Register <p onClick={()=>{history.push('/login')}}>or login</p></h1>
         <p>username:</p>
         <input value={username} onChange={e=>setUsername(e.target.value)} type="text" />
         <p>password:</p>

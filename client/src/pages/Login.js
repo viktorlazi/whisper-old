@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <div className="login">
       <form>
-        <h1>Login</h1>
+        <h1>Login <p onClick={()=>{history.push('/register')}}>or register</p></h1>
         <p>username:</p>
         <input value={username} onChange={e=>setUsername(e.target.value)} type="text" />
         <p>password:</p>

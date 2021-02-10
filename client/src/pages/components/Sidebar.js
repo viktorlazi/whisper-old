@@ -49,7 +49,7 @@ function Sidebar({socket, activeChat, changeActive, contacts, setContacts}) {
     socket.on('contact nonexistent', ()=>{
       setErrorMessage('user non existent');
     })
-  }, [socket])
+  }, [socket, setContacts, contacts])
 
   useEffect(()=>{
     socket.emit('get contact list')
