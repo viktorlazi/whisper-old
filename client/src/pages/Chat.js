@@ -7,7 +7,6 @@ import io from 'socket.io-client'
 
 export default function Chat() {
   const [activeChat, setActiveChat]=useState()
-  const [contacts, setContacts]=useState([])
   const history = useHistory();
 
   if(sessionStorage.getItem('user_token')){
@@ -25,9 +24,7 @@ export default function Chat() {
         <Sidebar 
           socket={socket} 
           activeChat={activeChat} 
-          changeActive={(name)=>setActiveChat(name)} 
-          contacts={contacts}
-          setContacts={setContacts}/>
+          changeActive={(name)=>setActiveChat(name)}/>
         <ChatBody 
           socket={socket} 
           activeChat={activeChat}/>

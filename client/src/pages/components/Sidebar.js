@@ -6,8 +6,9 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Avatar, IconButton} from '@material-ui/core'
 import './sidebar.css'
 
-function Sidebar({socket, activeChat, changeActive, contacts, setContacts}) {
+function Sidebar({socket, activeChat, changeActive}) {
   const [errorMessage, setErrorMessage] = useState('');
+  const [contacts, setContacts]=useState([])
   const [newContact, setNewContact] = useState('');
   const history = useHistory();
   
@@ -31,15 +32,15 @@ function Sidebar({socket, activeChat, changeActive, contacts, setContacts}) {
     if(newContact !== ''){
       if(!contacts.find(e=>e.name===newContact)){
         socket.emit('new contact', newContact)
-        setNewContact('')
       }else{
         setErrorMessage('already added')
       }
+      setNewContact('')
     }
   }
   useEffect(() => {
     socket.on('contact approved', contactDetails=>{
-      setContacts([...contacts, contactDetails]);
+      setContacts(contacts=>[...contacts, contactDetails]);
       setErrorMessage('')
     })
     socket.on('contact nonexistent', ()=>{
