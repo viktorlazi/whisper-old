@@ -32,10 +32,12 @@ socketio.on('connection', async (socket) => {
     {token:socket.handshake.auth.token}
   ).lean())
   if(callerToken){
-    const caller = await User.findOne({'username':callerToken.for})
     //from here it's ok to communicate with client
+    const caller = await User.findOne({'username':callerToken.for})
+    socket.on('get contact list', ()=>{
+      socket.emit('contact list', caller.contacts)
+    })
     socket.on('new contact', async (new_contact) => {
-      console.log("alo")
       const details = await User.findOne({'username':new_contact})
       if(details){
         if(!caller.contacts.find(e=>e.name===new_contact)){

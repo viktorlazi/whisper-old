@@ -31,6 +31,7 @@ export default function Chat() {
       </div>
     )
   }else{
+    history.push('/login')
     return(
       <div>Please log in</div>
     )

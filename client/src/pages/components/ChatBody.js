@@ -28,9 +28,7 @@ function ChatBody({socket, activeChat}) {
   }
   const burnContact = () =>{
     socket.emit('burn contact', activeChat)
-    
   }
-
   if(activeChat){
     return (
       <div className="chat_body">

@@ -38,7 +38,12 @@ function Sidebar({socket, activeChat, changeActive}) {
       setNewContact('')
     }
   }
-  useEffect(() => {
+  socket.on('connect', ()=>{
+    socket.emit('get contact list')
+    socket.on('contact list', (list)=>{
+      console.log(list)
+      setContacts(list)
+    })
     socket.on('contact approved', contactDetails=>{
       setContacts(contacts=>[...contacts, contactDetails]);
       setErrorMessage('')
@@ -46,7 +51,13 @@ function Sidebar({socket, activeChat, changeActive}) {
     socket.on('contact nonexistent', ()=>{
       setErrorMessage('user non existent');
     })
-  }, [socket])
+
+  })
+  
+  useEffect(() => {
+    socket.emit('get contact list')
+    console.log('alo')
+  }, [])
 
   return (
     <div className="sidebar">
