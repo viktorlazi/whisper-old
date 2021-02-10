@@ -36,6 +36,7 @@ socketio.on('connection', async (socket) => {
     const caller = await User.findOne({'username':callerToken.for})
     socket.on('get contact list', ()=>{
       socket.emit('contact list', caller.contacts)
+      console.log('alo')
     })
     socket.on('new contact', async (new_contact) => {
       const details = await User.findOne({'username':new_contact})

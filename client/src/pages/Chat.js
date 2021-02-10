@@ -7,6 +7,8 @@ import io from 'socket.io-client'
 
 export default function Chat() {
   const [activeChat, setActiveChat]=useState()
+  const [contacts, setContacts]=useState([])
+  const [messages, setMessages]=useState([])
   const history = useHistory();
 
   if(sessionStorage.getItem('user_token')){
@@ -19,15 +21,22 @@ export default function Chat() {
       sessionStorage.clear()
       history.push('/login')
     })
+    socket.on('disconnect', function () {
+      socket.removeAllListeners();
+    }); 
     return (
       <div className="chat">
         <Sidebar 
           socket={socket} 
           activeChat={activeChat} 
-          changeActive={(name)=>setActiveChat(name)}/>
+          changeActive={(name)=>setActiveChat(name)}
+          contacts={contacts}
+          setContacts={setContacts}/>
         <ChatBody 
           socket={socket} 
-          activeChat={activeChat}/>
+          activeChat={activeChat}
+          contacts={contacts}
+          setContacts={setContacts}/>
       </div>
     )
   }else{

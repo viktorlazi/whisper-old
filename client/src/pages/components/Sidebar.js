@@ -6,9 +6,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Avatar, IconButton} from '@material-ui/core'
 import './sidebar.css'
 
-function Sidebar({socket, activeChat, changeActive}) {
+function Sidebar({socket, activeChat, changeActive, contacts, setContacts}) {
   const [errorMessage, setErrorMessage] = useState('');
-  const [contacts, setContacts]=useState([])
   const [newContact, setNewContact] = useState('');
   const history = useHistory();
   
@@ -38,8 +37,7 @@ function Sidebar({socket, activeChat, changeActive}) {
       setNewContact('')
     }
   }
-  socket.on('connect', ()=>{
-    socket.emit('get contact list')
+  useEffect(() => {
     socket.on('contact list', (list)=>{
       console.log(list)
       setContacts(list)
@@ -51,13 +49,11 @@ function Sidebar({socket, activeChat, changeActive}) {
     socket.on('contact nonexistent', ()=>{
       setErrorMessage('user non existent');
     })
+  }, [socket])
 
-  })
-  
-  useEffect(() => {
+  useEffect(()=>{
     socket.emit('get contact list')
-    console.log('alo')
-  }, [])
+  },[])
 
   return (
     <div className="sidebar">
