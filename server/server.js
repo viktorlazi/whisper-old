@@ -9,54 +9,54 @@ import {login_user, logout_user} from './login.js'
 import token from './models/LoginToken.js'
 import User from './models/User.js'
 import {sendContacts} from './fetch.js'
+import Message from './models/Message.js'
 
-const app = express();  
-const server = createServer(app); 
+const app = express();
+const server = createServer(app);
 app.use(cors())
 app.use(express.json())
-const socketio = new io.Server(server);  
+const socketio = new io.Server(server);
 
 //mongo
-const connection_url = "mongodb+srv://admin:"+ mongo_pass +"@cluster0.lkgyy.mongodb.net/whisper?retryWrites=true&w=majority";
+const connection_url = "mongodb+srv://admin:" + mongo_pass + "@cluster0.lkgyy.mongodb.net/whisper?retryWrites=true&w=majority";
 mongoose.connect(connection_url, {
   useCreateIndex: true,
   useNewUrlParser:true,
   useUnifiedTopology:true
 })
 const db = mongoose.connection; 
-db.once('open', ()=>{ 
-})
+db.once('open', ()=>{})
 
-//client connections
 let clientConnections = []
 
 socketio.on('connection', async (socket) => {
-  console.log('connect')
   const clientToken = await token.findOne(
     {token:socket.handshake.auth.token}
-  ).lean()
-  if(clientToken){
-    //from here it's ok to communicate with client
-    let messages = [];
-    const client = await User.findOne({'username':clientToken.for})
-    clientConnections.push({username:client.username, id: socket})
-    clientConnections.map(x=>{
-      console.log(x.username)
-    })
+    ).lean()
+    if(clientToken){
+      //from here it's ok to communicate with client
+      const client = await User.findOne({'username':clientToken.for})
+      clientConnections.push({username:client.username, id: socket})
+      let messages = [];
+      
     // messages sockets
     socket.on('new message', (msg, to, timestamp)=>{
-      messages = [...messages, {msg, to, timestamp}]
+      messages = [...messages, {msg:msg, from: client.username, to:to, timestamp:timestamp}]
       clientConnections.find(e=>e.username===to).id.emit('incoming message', {msg:msg, from:client.username, timestamp:timestamp})
     })
     socket.on('disconnect', ()=>{
       clientConnections = clientConnections.filter(e=>{
         return e.username!==client.username
       })
-      clientConnections.map(x=>{
-        console.log(x.username)
-      })
-
-      //send to db
+      messages.forEach(e => {
+        Message.create({
+          message:e.msg,
+          from:e.from,
+          to:e.to,
+          timestamp:e.timestamp
+        })
+      });
+      messages = null
     })
 
     // contact sockets
@@ -107,13 +107,20 @@ app.post('/api/logout', async (req, res) =>{
 app.post('/api/get_contacts', async(req, res) =>{
   res.send(await sendContacts(req.body.token))
 })
-
 app.get('/api/logout_everyone', async (req, res)=>{
-  token.deleteMany().then(()=>{
+  token.deleteMany().exec().then(()=>{
     socketio.emit('not logged in')
   })
   res.sendStatus(200)
 })
+app.get('/api/delete_all_accounts', async (req, res)=>{
+  User.deleteMany().exec();
+  token.deleteMany().exec().then(()=>{
+    socketio.emit('not logged in')
+  })
+  res.sendStatus(200)
+})
+
 server.listen(4000, ()=>{
   
 })
