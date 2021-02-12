@@ -8,6 +8,7 @@ import {add_user} from './register.js'
 import {login_user, logout_user} from './login.js'
 import token from './models/LoginToken.js'
 import User from './models/User.js'
+import {sendContacts} from './fetch.js'
 
 const app = express();  
 const server = createServer(app); 
@@ -27,29 +28,29 @@ db.once('open', ()=>{
 })
 
 socketio.on('connection', async (socket) => {
-  const callerToken = (await token.findOne(
+  const clientToken = await token.findOne(
     {token:socket.handshake.auth.token}
-  ).lean())
-  if(callerToken){
+  ).lean()
+  if(clientToken){
     //from here it's ok to communicate with client
-    const caller = await User.findOne({'username':callerToken.for})
+    const client = await User.findOne({'username':clientToken.for})
     
     socket.on('block contact', (contact)=>{
-      if(!caller.blocked.find(e=>e.name===contact)){
-        User.updateOne({_id:caller._id}, {
-          blocked:[...caller.blocked, contact]
+      if(!client.blocked.find(e=>e.name===contact)){
+        User.updateOne({_id:client._id}, {
+          blocked:[...client.blocked, contact]
         }).exec()
       }
     })
     socket.on('get contact list', ()=>{
-      socket.emit('contact list', caller.contacts)
+      socket.emit('contact list', client.contacts)
     })
     socket.on('new contact', async (new_contact) => {
       const details = await User.findOne({'username':new_contact})
       if(details){
-        if(!caller.contacts.find(e=>e.name===new_contact)){
-          User.updateOne({_id:caller._id}, {
-            contacts:[...caller.contacts, {name:details.username, last:'Say hello...'}]
+        if(!client.contacts.find(e=>e.name===new_contact)){
+          User.updateOne({_id:client._id}, {
+            contacts:[...client.contacts, {name:details.username, last:'Say hello...'}]
           }).exec()
         }
         socket.emit('contact approved', {name:details.username, last:'Say hello...'})
@@ -60,8 +61,8 @@ socketio.on('connection', async (socket) => {
     }
     );
     socket.on('burn contact', async (username) => {
-      User.updateOne({_id:caller.id}, {
-        contacts:caller.contacts.filter(e=>{
+      User.updateOne({_id:client.id}, {
+        contacts:client.contacts.filter(e=>{
           return e.name!=username
         })
       }).exec()
@@ -81,13 +82,16 @@ app.post('/api/login', async (req, res) =>{
 app.post('/api/logout', async (req, res) =>{
   res.send(await logout_user(req.body))
 })
+app.post('/api/get_contacts', async(req, res) =>{
+  res.send(await sendContacts(req.body.token))
+})
+
 app.get('/api/logout_everyone', async (req, res)=>{
   token.deleteMany().then(()=>{
     socketio.emit('not logged in')
   })
   res.sendStatus(200)
 })
-
 server.listen(4000, ()=>{
   
 })

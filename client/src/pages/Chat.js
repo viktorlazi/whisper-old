@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {useHistory} from 'react-router-dom'
 import './chat.css'
 import ChatBody from './components/ChatBody'
@@ -21,6 +21,21 @@ export default function Chat() {
       sessionStorage.clear()
       history.push('/login')
     })
+    useEffect(() => {
+      fetch("http://localhost:4000/api/get_contacts",{
+        method: 'POST',
+        body:JSON.stringify({
+          token:sessionStorage.getItem('user_token')
+        }),
+        headers:{
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res=>res.json())
+      .then(res=>{
+        setContacts(res)
+      })
+    }, [])
     return (
       <div className="chat">
         <Sidebar 
