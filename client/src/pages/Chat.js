@@ -9,19 +9,19 @@ export default function Chat() {
   const [activeChat, setActiveChat]=useState()
   const [contacts, setContacts]=useState([])
   const [messages, setMessages]=useState([])
-  const history = useHistory();
+  const [socket, setSocket]=useState(io)
+  socket.removeAllListeners()
+  const history = useHistory()
 
   if(sessionStorage.getItem('user_token')){
-    const socket = io('http://127.0.0.1:4000', {
-    auth: {
-      token:sessionStorage.getItem('user_token')
-      }
-    })
-    socket.on('not logged in', ()=>{
-      sessionStorage.clear()
-      history.push('/login')
-    })
+    
     useEffect(() => {
+      setSocket(io('http://127.0.0.1:4000', {
+        auth: {
+          token:sessionStorage.getItem('user_token')
+          }
+        })
+      )
       fetch("http://localhost:4000/api/get_contacts",{
         method: 'POST',
         body:JSON.stringify({
@@ -35,8 +35,14 @@ export default function Chat() {
       .then(res=>{
         setContacts(res)
       })
-      
+
     }, [])
+
+    socket.on('not logged in', ()=>{
+      sessionStorage.clear()
+      history.push('/login')
+    })
+
     return (
       <div className="chat">
         <Sidebar 

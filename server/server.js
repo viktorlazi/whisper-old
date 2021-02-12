@@ -28,22 +28,33 @@ db.once('open', ()=>{
 })
 
 socketio.on('connection', async (socket) => {
+  console.log('connect')
   const clientToken = await token.findOne(
     {token:socket.handshake.auth.token}
   ).lean()
   if(clientToken){
     //from here it's ok to communicate with client
+    let messages = [];
     const client = await User.findOne({'username':clientToken.for})
-    
+
+    // messages sockets
+    socket.on('new message', (msg, to, timestamp)=>{
+      messages = [...messages, {msg, to, timestamp}]
+      
+    })
+    socket.on('disconnect', ()=>{
+      socket.removeAllListeners('send message');
+      socket.removeAllListeners('disconnect');
+      console.log('re')
+    })
+
+    // contact sockets
     socket.on('block contact', (contact)=>{
       if(!client.blocked.find(e=>e.name===contact)){
         User.updateOne({_id:client._id}, {
           blocked:[...client.blocked, contact]
         }).exec()
       }
-    })
-    socket.on('get contact list', ()=>{
-      socket.emit('contact list', client.contacts)
     })
     socket.on('new contact', async (new_contact) => {
       const details = await User.findOne({'username':new_contact})
@@ -61,7 +72,7 @@ socketio.on('connection', async (socket) => {
     }
     );
     socket.on('burn contact', async (username) => {
-      User.updateOne({_id:client.id}, {
+      User.updateOne({_id:client._id}, {
         contacts:client.contacts.filter(e=>{
           return e.name!=username
         })
