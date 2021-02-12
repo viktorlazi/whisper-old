@@ -8,7 +8,7 @@ import {add_user} from './register.js'
 import {login_user, logout_user} from './login.js'
 import token from './models/LoginToken.js'
 import User from './models/User.js'
-import {sendContacts} from './fetch.js'
+import {sendContacts, sendMessages} from './fetch.js'
 import Message from './models/Message.js'
 
 const app = express();
@@ -41,22 +41,30 @@ socketio.on('connection', async (socket) => {
       
     // messages sockets
     socket.on('new message', (msg, to, timestamp)=>{
-      messages = [...messages, {msg:msg, from: client.username, to:to, timestamp:timestamp}]
-      clientConnections.find(e=>e.username===to).id.emit('incoming message', {msg:msg, from:client.username, timestamp:timestamp})
+      const receiverSocket = clientConnections.find(e=>e.username===to);
+      if(receiverSocket){
+        receiverSocket.id.emit('incoming message', {msg:msg, from:client.username, timestamp:timestamp})
+      }else{
+        messages = [...messages, {msg:msg, from: client.username, to:to, timestamp:timestamp}]
+        console.log(messages)
+      }
     })
     socket.on('disconnect', ()=>{
       clientConnections = clientConnections.filter(e=>{
         return e.username!==client.username
       })
-      messages.forEach(e => {
-        Message.create({
-          message:e.msg,
-          from:e.from,
-          to:e.to,
-          timestamp:e.timestamp
-        })
-      });
-      messages = null
+      if(messages){ // only save to db if socket isnt alive
+        messages.forEach(e => {
+          Message.create({
+            message:e.msg,
+            from:e.from,
+            to:e.to,
+            timestamp:e.timestamp
+          })
+        });
+        messages = null
+      }
+
     })
 
     // contact sockets
@@ -106,6 +114,9 @@ app.post('/api/logout', async (req, res) =>{
 })
 app.post('/api/get_contacts', async(req, res) =>{
   res.send(await sendContacts(req.body.token))
+})
+app.post('/api/get_messages', async(req, res) =>{
+  res.send(await sendMessages(req.body.token))
 })
 app.get('/api/logout_everyone', async (req, res)=>{
   token.deleteMany().exec().then(()=>{

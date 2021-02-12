@@ -12,7 +12,8 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   const[input, setInput] = useState("")
 
   const addMessageToState = (msg, sender, receiver, timestamp) =>{
-    setMessages(
+    setMessages( 
+      messages=>
       [...messages,  { 
         msg:msg,
         sender:sender,
@@ -43,6 +44,23 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   socket.on('incoming message', (message)=>{
     addMessageToState(message.msg, message.from, sessionStorage.getItem('username'), message.timestamp)
   })
+  useEffect(() => {
+    fetch("http://localhost:4000/api/get_messages",{
+        method: 'POST',
+        body:JSON.stringify({
+          token:sessionStorage.getItem('user_token')
+        }),
+        headers:{
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res=>res.json())
+      .then(res=>{
+        res.map(msg=>{
+          addMessageToState(msg.message, msg.from, msg.to, msg.timestamp)
+        })
+      })
+  }, [sessionStorage.getItem('user_token')])
   if(activeChat){
     return (
       <div className="chat_body">
