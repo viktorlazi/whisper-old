@@ -39,19 +39,23 @@ socketio.on('connection', async (socket) => {
     //from here it's ok to communicate with client
     let messages = [];
     const client = await User.findOne({'username':clientToken.for})
-    clientConnections.push(client.username)
-    console.log(clientConnections)
-
+    clientConnections.push({username:client.username, id: socket})
+    clientConnections.map(x=>{
+      console.log(x.username)
+    })
     // messages sockets
     socket.on('new message', (msg, to, timestamp)=>{
       messages = [...messages, {msg, to, timestamp}]
-      
+      clientConnections.find(e=>e.username===to).id.emit('incoming message', {msg:msg, from:client.username, timestamp:timestamp})
     })
     socket.on('disconnect', ()=>{
       clientConnections = clientConnections.filter(e=>{
-        return e!==client.username
+        return e.username!==client.username
       })
-      console.log(clientConnections)
+      clientConnections.map(x=>{
+        console.log(x.username)
+      })
+
       //send to db
     })
 

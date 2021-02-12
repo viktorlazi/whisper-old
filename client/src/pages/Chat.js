@@ -21,6 +21,7 @@ export default function Chat() {
           }
         })
       )
+      
       fetch("http://localhost:4000/api/get_contacts",{
         method: 'POST',
         body:JSON.stringify({
@@ -38,13 +39,10 @@ export default function Chat() {
   }, [])
 
   if(sessionStorage.getItem('user_token')){
-    
-
     socket.on('not logged in', ()=>{
       sessionStorage.clear()
       history.push('/login')
     })
-
     return (
       <div className="chat">
         <Sidebar 

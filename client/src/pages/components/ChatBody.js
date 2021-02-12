@@ -39,8 +39,9 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   const blockContact = () =>{
     socket.emit('block contact', activeChat)
   }
+  
   socket.on('incoming message', (message)=>{
-    addMessageToState(message, )
+    addMessageToState(message.msg, message.from, sessionStorage.getItem('username'), message.timestamp)
   })
   if(activeChat){
     return (
