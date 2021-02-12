@@ -25,7 +25,9 @@ mongoose.connect(connection_url, {
   useUnifiedTopology:true
 })
 const db = mongoose.connection; 
-db.once('open', ()=>{})
+db.once('open', ()=>{
+  console.log('db ok')
+})
 
 let clientConnections = []
 
@@ -46,7 +48,6 @@ socketio.on('connection', async (socket) => {
         receiverSocket.id.emit('incoming message', {msg:msg, from:client.username, timestamp:timestamp})
       }else{
         messages = [...messages, {msg:msg, from: client.username, to:to, timestamp:timestamp}]
-        console.log(messages)
       }
     })
     socket.on('disconnect', ()=>{
@@ -132,6 +133,4 @@ app.get('/api/delete_all_accounts', async (req, res)=>{
   res.sendStatus(200)
 })
 
-server.listen(4000, ()=>{
-  
-})
+server.listen(4000)

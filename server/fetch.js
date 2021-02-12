@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import LoginToken from './models/LoginToken.js'
 import User from "./models/User.js";
 import Messages from './models/Message.js'
