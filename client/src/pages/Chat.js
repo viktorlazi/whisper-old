@@ -35,6 +35,7 @@ export default function Chat() {
       .then(res=>{
         setContacts(res)
       })
+      
     }, [])
     return (
       <div className="chat">

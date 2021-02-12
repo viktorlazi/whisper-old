@@ -50,9 +50,6 @@ function Sidebar({socket, activeChat, changeActive, contacts, setContacts}) {
     })
   }, [socket, setContacts, contacts])
 
-  useEffect(()=>{
-    socket.emit('get contact list')
-  },[])
 
   return (
     <div className="sidebar">

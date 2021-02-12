@@ -25,6 +25,7 @@ export default function Login() {
       result => {
         if(result.status === 'ok'){
           sessionStorage.setItem('user_token', result.token)
+          sessionStorage.setItem('username', username)
           history.push('/chat')
         }else{
           setErrorMessage(result.error)

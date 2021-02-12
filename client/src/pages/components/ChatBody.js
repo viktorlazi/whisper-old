@@ -11,18 +11,21 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   const [messages, setMessages] = useState([])
   const[input, setInput] = useState("")
 
-  const addMessageToState = (msg, time, receiver) =>{
-    setMessages([...messages, {
-      message:msg,
-      timestamp:time,
-      receiver:receiver
-    }])
+  const addMessageToState = (msg, sender, receiver, timestamp) =>{
+    setMessages(
+      [...messages,  { 
+        msg:msg,
+        sender:sender,
+        receiver:receiver,
+        timestamp:timestamp
+      }],
+    )
   }
   const sendMessage = async(e)=>{
     e.preventDefault();
     if(input !== ""){
-      addMessageToState(input, 'now', true)
-      socket.emit('chat message', input)
+      addMessageToState(input, sessionStorage.getItem('username'), activeChat, 'now')
+      socket.emit('new message', input, activeChat, 'now')
       setInput("")
     }
   }
@@ -36,6 +39,9 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   const blockContact = () =>{
     socket.emit('block contact', activeChat)
   }
+  socket.on('incoming message', (message)=>{
+    addMessageToState(message, )
+  })
   if(activeChat){
     return (
       <div className="chat_body">
@@ -56,11 +62,12 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
         <div className="chat_meat">
           {
             messages.map(
-              (msg) =>{
+              (obj) =>{
                 return <Message 
-                  message={msg.message}
-                  timestamp={msg.timestamp}
-                  receiver={msg.receiver}/>
+                  message={obj.msg}
+                  timestamp={obj.timestamp}
+                  sender={obj.receiver === activeChat || obj.sender === activeChat}
+                  receiver={obj.receiver !== sessionStorage.getItem('username')}/>
               }
             )
           }
