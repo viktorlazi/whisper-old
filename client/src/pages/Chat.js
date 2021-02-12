@@ -13,9 +13,8 @@ export default function Chat() {
   socket.removeAllListeners()
   const history = useHistory()
 
-  if(sessionStorage.getItem('user_token')){
-    
-    useEffect(() => {
+  useEffect(() => {
+    if(sessionStorage.getItem('user_token')){
       setSocket(io('http://127.0.0.1:4000', {
         auth: {
           token:sessionStorage.getItem('user_token')
@@ -35,8 +34,11 @@ export default function Chat() {
       .then(res=>{
         setContacts(res)
       })
+    }
+  }, [])
 
-    }, [])
+  if(sessionStorage.getItem('user_token')){
+    
 
     socket.on('not logged in', ()=>{
       sessionStorage.clear()

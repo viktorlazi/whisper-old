@@ -27,6 +27,9 @@ const db = mongoose.connection;
 db.once('open', ()=>{ 
 })
 
+//client connections
+let clientConnections = []
+
 socketio.on('connection', async (socket) => {
   console.log('connect')
   const clientToken = await token.findOne(
@@ -36,6 +39,8 @@ socketio.on('connection', async (socket) => {
     //from here it's ok to communicate with client
     let messages = [];
     const client = await User.findOne({'username':clientToken.for})
+    clientConnections.push(client.username)
+    console.log(clientConnections)
 
     // messages sockets
     socket.on('new message', (msg, to, timestamp)=>{
@@ -43,9 +48,11 @@ socketio.on('connection', async (socket) => {
       
     })
     socket.on('disconnect', ()=>{
-      socket.removeAllListeners('send message');
-      socket.removeAllListeners('disconnect');
-      console.log('re')
+      clientConnections = clientConnections.filter(e=>{
+        return e!==client.username
+      })
+      console.log(clientConnections)
+      //send to db
     })
 
     // contact sockets
