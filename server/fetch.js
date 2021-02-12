@@ -21,6 +21,9 @@ export const sendMessages = async (token) =>{
     })
     if(unreadMessages){
       console.log(unreadMessages)
+      Messages.deleteMany({
+        to:clientToken.for
+      }).exec()
       return unreadMessages
     }
     return []
