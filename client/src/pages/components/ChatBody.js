@@ -33,7 +33,7 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
     socket.emit('burn contact', activeChat)
     closeChat()
     setContacts(contacts=>contacts.filter(e=>{
-      return e.name!=activeChat
+      return e.name!==activeChat
     }))
   }
   const blockContact = () =>{
@@ -43,6 +43,7 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   socket.on('incoming message', (message)=>{
     addMessageToState(message.msg, message.from, sessionStorage.getItem('username'), message.timestamp)
   })
+
   useEffect(() => {
     fetch("http://localhost:4000/api/get_messages",{
         method: 'POST',
@@ -57,9 +58,11 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
       .then(res=>{
         res.map(msg=>{
           addMessageToState(msg.message, msg.from, msg.to, msg.timestamp)
+          return null;
         })
       })
-  }, [sessionStorage.getItem('user_token')])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   if(activeChat){
     return (
       <div className="chat_body">

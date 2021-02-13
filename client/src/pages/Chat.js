@@ -8,7 +8,6 @@ import io from 'socket.io-client'
 export default function Chat() {
   const [activeChat, setActiveChat]=useState()
   const [contacts, setContacts]=useState([])
-  const [messages, setMessages]=useState([])
   const [socket, setSocket]=useState(io)
   socket.removeAllListeners()
   const history = useHistory()

@@ -12,11 +12,15 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Route exact path="/" component={Chat} />
+        <Route exact path="/" component={Home} />
         <Route exact path="/chat" component={Chat} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
       </div>
+      <app className="Mobile">
+        <h2>App not available on small screens</h2>
+        <h3>Mobile app is in development</h3>
+      </app>
     </Router>
   );
 }
