@@ -1,4 +1,3 @@
-
 import React, {useState, useEffect} from 'react'
 import {Avatar, IconButton} from '@material-ui/core'
 import WhatshotIcon from '@material-ui/icons/WhatshotOutlined';
@@ -24,8 +23,10 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   const sendMessage = async(e)=>{
     e.preventDefault();
     if(input !== ""){
-      addMessageToState(input, sessionStorage.getItem('username'), activeChat, 'now')
-      socket.emit('new message', input, activeChat, 'now')
+      let now = new Date().getHours().toString() + ":"
+        + new Date().getMinutes().toString();
+      addMessageToState(input, sessionStorage.getItem('username'), activeChat, now)
+      socket.emit('new message', input, activeChat, now)
       setInput("")
     }
   }
