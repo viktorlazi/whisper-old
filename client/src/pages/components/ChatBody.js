@@ -12,8 +12,7 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   const[input, setInput] = useState("")
 
   const addMessageToState = (msg, sender, receiver, timestamp) =>{
-    setMessages( 
-      messages=>
+    setMessages(
       [...messages,  { 
         msg:msg,
         sender:sender,
