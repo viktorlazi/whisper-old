@@ -14,5 +14,5 @@ Whisper is a security and privacy oriented messaging service.
 
 ## Setup
 To run it locally:
-npm start in client directory
-nodemon server.js in server directory
+* npm start in client directory
+* nodemon server.js in server directory
