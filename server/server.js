@@ -10,6 +10,7 @@ import token from './models/LoginToken.js'
 import User from './models/User.js'
 import {sendContacts, sendMessages} from './fetch.js'
 import Message from './models/Message.js'
+import bigPrime from './bigprime.js'
 
 const app = express();
 const server = createServer(app);
@@ -30,6 +31,7 @@ db.once('open', ()=>{
 })
 
 let clientConnections = []
+let messages = [];
 
 socketio.on('connection', async (socket) => {
   const clientToken = await token.findOne(
@@ -38,8 +40,13 @@ socketio.on('connection', async (socket) => {
     if(clientToken){
       //from here it's ok to communicate with client
       const client = await User.findOne({'username':clientToken.for})
-      clientConnections.push({username:client.username, id: socket})
-      let messages = [];
+      socket.emit('big prime', 13)
+
+    socket.on("my public key", (pk)=>{
+      clientConnections.push({username:client.username, id: socket, publicKey:pk})
+      console.log(pk)
+    })
+      
       
     // messages sockets
     socket.on('new message', (msg, to, timestamp)=>{
