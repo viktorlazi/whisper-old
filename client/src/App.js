@@ -17,10 +17,10 @@ function App() {
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
       </div>
-      <app className="Mobile">
+      <div className="Mobile">
         <h2>App not available on small screens</h2>
         <h3>Mobile app is in development</h3>
-      </app>
+      </div>
     </Router>
   );
 }
