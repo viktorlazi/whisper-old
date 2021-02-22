@@ -19,8 +19,7 @@ export default function Chat() {
           token:sessionStorage.getItem('user_token')
           }
         })
-      )
-      
+      )      
       fetch("http://localhost:4000/api/get_contacts",{
         method: 'POST',
         body:JSON.stringify({
