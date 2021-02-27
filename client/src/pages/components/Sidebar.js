@@ -37,19 +37,16 @@ function Sidebar({socket, activeChat, changeActive, contacts, setContacts}) {
       setNewContact('')
     }
   }
-  useEffect(() => {
-    socket.on('contact list', (list)=>{
-      setContacts(list)
-    })
-    socket.on('contact approved', contactDetails=>{
-      setContacts(contacts=>[...contacts, contactDetails]);
-      setErrorMessage('')
-    })
-    socket.on('contact nonexistent', ()=>{
-      setErrorMessage('user non existent');
-    })
-  }, [socket, setContacts, contacts])
-
+  socket.on('contact approved', contactDetails=>{
+    setContacts(contacts=>[...contacts, contactDetails]);
+    setErrorMessage('')
+  })
+  socket.on('contact nonexistent', ()=>{
+    setErrorMessage('user non existent')
+  })
+  socket.on('contact is you', ()=>{
+    setErrorMessage('you cant add yourself as a contact')
+  })
 
   return (
     <div className="sidebar">
