@@ -7,27 +7,27 @@ const JWT_SECRET = 'WZZWZEklsdjf293e098r**?2--sdfwefewmlfkwef2l3krnfs lefkjwefek
 
 export const login_user = async(body)=>{
   const user_token = await LoginToken.findOne({"for":body.username})
-  if(user_token){
-    return {status:'error', error:'already logged in'}
-  }
   const user = await User.findOne({"username":body.username})
   if(!user){
     return {status:'error', error:'invalid username/password'}
   }
   if(await bcrypt.compare(body.password, user.password)){
+    if(user_token){
+      return {status:'ok', token:user_token.token}
+    }
     const token = jwt.sign(
       {
         id:user._id, 
         username:user.username
       },
       JWT_SECRET
-    )
-    LoginToken.create({
-      token:token,
-      for:body.username
-    })
-    return {status:'ok', token:token}// contacts:[...user.contacts]}
-  }
+      )
+      LoginToken.create({
+        token:token,
+        for:body.username
+      })
+      return {status:'ok', token:token}// contacts:[...user.contacts]}
+    }
   return {status:'error', error:'invalid username/password'}
 }
 
