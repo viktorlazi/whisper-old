@@ -43,20 +43,16 @@ socketio.on('connection', async (socket) => {
       clientConnections.push({username:client.username, id: socket})
       
       socket.on('public_key', (pub_key, username)=>{
-        console.log(pub_key + " " + username)
         const bobSocket = clientConnections.find(e=>e.username===username)
-
         if(bobSocket){
-          bobSocket.id.emit('public key request', client.username)
-          
+          bobSocket.id.emit('public key request', client.username, pub_key)
         }
       })
-      socket.on('fetch_bobs_key', (contact)=>{
-        const bobsKey = clientConnections.filter((e)=>{
-          return e.username===contact
-        })
-        console.log(bobsKey)
-        socket.emit('bobs_key', bobsKey)
+      socket.on('got a secret', (username, pub_key) =>{
+        const bobSocket = clientConnections.find(e=>e.username===username)
+        if(bobSocket){
+          bobSocket.id.emit('here is my public key', client.username, pub_key)
+        }
       })
       
       // messages sockets
@@ -86,7 +82,7 @@ socketio.on('connection', async (socket) => {
             })
           });
           messages = null
-        }      
+        }
       })
       
       // contact sockets

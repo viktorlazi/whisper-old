@@ -9,6 +9,7 @@ export default function Chat() {
   const [activeChat, setActiveChat]=useState()
   const [contacts, setContacts]=useState([])
   const [encryptionKeys, setEncryptionKeys]=useState([])
+  const [sharedSecret, setSharedSecret]=useState([])
   const [socket, setSocket]=useState(io)
   socket.removeAllListeners()
   
@@ -50,7 +51,7 @@ export default function Chat() {
     return mod
   }
   const createSharedSecret = (prKey, pubKey) =>{
-
+    return prKey*pubKey
   }
   const newEncryptionKeys = (username)=>{
     if(encryptionKeys.length > 0){
@@ -79,11 +80,25 @@ export default function Chat() {
   }, [activeChat])
 
   socket.on('public key request', (username, pubKey)=>{
-    const newKeys = newEncryptionKeys(username);
-    socket.emit('shared secret accomplished', newKeys.pubKey, username)
-    setEncryptionKeys(encryptionKeys=>[...encryptionKeys, newKeys]) 
     const bobsKey = encryptionKeys.find(e=>e.username===username)
-    const sharedSecret = createSharedSecret(bobsKey.prKey, bobsKey.pubKey)
+    if(bobsKey !== undefined){
+      const _sharedSecret = createSharedSecret(bobsKey.prKey, pubKey)
+      alert(_sharedSecret)    
+    }else{
+      const newKeys = newEncryptionKeys(username)
+      if(newKeys){
+        setEncryptionKeys(encryptionKeys=>[...encryptionKeys, newKeys]) 
+        setSharedSecret(createSharedSecret(newKeys.prKey, pubKey))
+        socket.emit('public_key', username, newKeys.pubKey)
+        console.log(sharedSecret)
+      }
+    }
+  })
+
+  socket.on("here is my public key", (username, pubKey)=>{
+    const bobsKey = encryptionKeys.find(e=>e.username===username)
+    setSharedSecret(createSharedSecret(bobsKey.prKey, pubKey))
+    console.log(sharedSecret)
   })
 
   
