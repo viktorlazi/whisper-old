@@ -9,11 +9,13 @@ export default function Chat() {
   const [activeChat, setActiveChat]=useState()
   const [contacts, setContacts]=useState([])
 
-  const [encryptionKeys, setEncryptionKeys]=useState([])
+  const [encryptionKey, setEncryptionKey]=useState({})
   const [sharedSecrets, setSharedSecrets]=useState([])
   const [socket, setSocket]=useState(io)
   socket.removeAllListeners()
   const history = useHistory()
+
+  const delay = ms => new Promise(res => setTimeout(res, ms));
 
   useEffect(() => {
     if(sessionStorage.getItem('user_token')){
@@ -37,8 +39,20 @@ export default function Chat() {
         setContacts(res)
       })
     }
+    
   }, [])
 
+  useEffect(async () => {
+    await delay(500)
+    const prKey = generatePrivateKey()
+    const pubKey = generatePublicKey(prKey)
+    setEncryptionKey({
+      private: prKey,
+      public: pubKey
+    })
+    console.log(encryptionKey)
+    socket.emit('my public key', pubKey)
+  }, [socket])
 
   const generatePrivateKey = () =>{
     const rnd = (Math.random() * 10 + 1)
@@ -49,19 +63,9 @@ export default function Chat() {
     const exp = Math.pow(2, prKey)
     const mod = exp%13;
     return mod
-  }
-  const createSharedSecret = (prKey, pubKey) =>{
-    
-  }
-  const newEncryptionKeys = (username)=>{
-    
-  }
-
-  useEffect(() => {
-    if(activeChat){
-      
-    }
-  }, [activeChat])
+  } 
+  
+  
 
 
   if(sessionStorage.getItem('user_token')){

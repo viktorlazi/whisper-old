@@ -40,10 +40,11 @@ socketio.on('connection', async (socket) => {
     if(clientToken){
       //from here it's ok to communicate with client
       const client = await User.findOne({'username':clientToken.for})
-
-      clientConnections.push({username:client.username, id: socket})
       
-     
+      socket.on('my public key', (pk)=>{
+        clientConnections.push({username:client.username, id: socket, publicKey:pk})
+        console.log(clientConnections)
+      })
       
       // messages sockets
       socket.on('new message', (msg, to, timestamp)=>{
@@ -73,40 +74,7 @@ socketio.on('connection', async (socket) => {
           });
           messages = null
         }
-      })
-      socket.emit('big prime', 13)
-
-    socket.on("my public key", (pk)=>{
-      clientConnections.push({username:client.username, id: socket, publicKey:pk})
-      console.log(pk)
-    })
-      
-    // messages sockets
-    socket.on('new message', (msg, to, timestamp)=>{
-      const receiverSocket = clientConnections.find(e=>e.username===to);
-      if(receiverSocket){
-        receiverSocket.id.emit('incoming message', {msg:msg, from:client.username, timestamp:timestamp})
-      }else{
-        messages = [...messages, {msg:msg, from: client.username, to:to, timestamp:timestamp}]
-      }
-    })
-    socket.on('disconnect', ()=>{
-      clientConnections = clientConnections.filter(e=>{
-        return e.username!==client.username
-      })
-      if(messages){ // only save to db if socket isnt alive
-        messages.forEach(e => {
-          Message.create({
-            message:e.msg,
-            from:e.from,
-            to:e.to,
-            timestamp:e.timestamp
-          })
-        });
-        messages = null
-      }
-
-    })
+      })   
 
     // contact sockets
     socket.on('block contact', (contact)=>{
