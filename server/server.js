@@ -10,7 +10,6 @@ import token from './models/LoginToken.js'
 import User from './models/User.js'
 import {sendContacts, sendMessages} from './fetch.js'
 import Message from './models/Message.js'
-import bigPrime from './bigprime.js'
 
 const app = express();
 const server = createServer(app);

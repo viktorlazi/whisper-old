@@ -4,6 +4,9 @@ import './chat.css'
 import ChatBody from './components/ChatBody'
 import Sidebar from './components/Sidebar'
 import io from 'socket.io-client'
+import * as bigInt from 'big-integer'
+import bigPrime from './bigprime.js'
+
 
 export default function Chat() {
   const [activeChat, setActiveChat]=useState()
@@ -55,18 +58,25 @@ export default function Chat() {
   }, [socket])
 
   const generatePrivateKey = () =>{
-    const rnd = (Math.random() * 100 + 1)
+    const rnd = (Math.random() * 1000 + 1)
     const rndInt = Math.floor(rnd)
     return rndInt
   }
   const generatePublicKey = (prKey) =>{
-    const exp = Math.pow(2, prKey)
-    const mod = exp%91;
-    return mod
+    const _prKey = bigInt(prKey)
+    const generator = bigInt(2)
+    const prime = bigInt('0x' + bigPrime)
+    const pubKey = generator.modPow(_prKey, prime)
+    return pubKey
   } 
 
   const createSharedSecret = (prKey, pubKey) =>{
-    return 100
+    const _prKey = bigInt(prKey)
+    const _pubKey = bigInt(pubKey)
+    const prime = bigInt('0x' + bigPrime)
+    const secret = _pubKey.modPow(_prKey, prime)
+    alert(secret)
+    return secret
   }
 
   useEffect(() => {
@@ -81,7 +91,6 @@ export default function Chat() {
       username:username,
       secret:createSharedSecret(encryptionKey.private, key)
     }])
-    alert()
   })
 
 
