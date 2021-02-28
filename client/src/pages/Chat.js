@@ -55,17 +55,25 @@ export default function Chat() {
   }, [socket])
 
   const generatePrivateKey = () =>{
-    const rnd = (Math.random() * 10 + 1)
+    const rnd = (Math.random() * 100 + 1)
     const rndInt = Math.floor(rnd)
     return rndInt
   }
   const generatePublicKey = (prKey) =>{
     const exp = Math.pow(2, prKey)
-    const mod = exp%13;
+    const mod = exp%91;
     return mod
   } 
+
+  useEffect(() => {
+    if(activeChat){
+      socket.emit('request public key', activeChat)
+    }
+  }, [activeChat])
   
-  
+  socket.on('bobs public key', (key)=>{
+    alert(key)
+  })
 
 
   if(sessionStorage.getItem('user_token')){

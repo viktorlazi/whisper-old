@@ -43,7 +43,16 @@ socketio.on('connection', async (socket) => {
       
       socket.on('my public key', (pk)=>{
         clientConnections.push({username:client.username, id: socket, publicKey:pk})
-        console.log(clientConnections)
+
+      })
+      socket.on('request public key', (username)=>{
+        const bob = clientConnections.find(e=>e.username===username)
+        if(bob){
+          const bobsKey = bob.publicKey
+          socket.emit('bobs public key', bobsKey)
+        }else{
+          socket.emit('bobs public key', 'not online')
+        }
       })
       
       // messages sockets
