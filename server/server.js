@@ -30,8 +30,8 @@ db.once('open', ()=>{
   console.log('db ok')
 })
 
-let messages = [];
 let clientConnections = []
+let messages = [];
 
 socketio.on('connection', async (socket) => {
   const clientToken = await token.findOne(
@@ -40,6 +40,7 @@ socketio.on('connection', async (socket) => {
     if(clientToken){
       //from here it's ok to communicate with client
       const client = await User.findOne({'username':clientToken.for})
+
       clientConnections.push({username:client.username, id: socket})
       
      
@@ -73,42 +74,70 @@ socketio.on('connection', async (socket) => {
           messages = null
         }
       })
+      socket.emit('big prime', 13)
+
+    socket.on("my public key", (pk)=>{
+      clientConnections.push({username:client.username, id: socket, publicKey:pk})
+      console.log(pk)
+    })
       
-      // contact sockets
-      socket.on('block contact', (contact)=>{
-        if(!client.blocked.find(e=>e.name===contact)){
+    // messages sockets
+    socket.on('new message', (msg, to, timestamp)=>{
+      const receiverSocket = clientConnections.find(e=>e.username===to);
+      if(receiverSocket){
+        receiverSocket.id.emit('incoming message', {msg:msg, from:client.username, timestamp:timestamp})
+      }else{
+        messages = [...messages, {msg:msg, from: client.username, to:to, timestamp:timestamp}]
+      }
+    })
+    socket.on('disconnect', ()=>{
+      clientConnections = clientConnections.filter(e=>{
+        return e.username!==client.username
+      })
+      if(messages){ // only save to db if socket isnt alive
+        messages.forEach(e => {
+          Message.create({
+            message:e.msg,
+            from:e.from,
+            to:e.to,
+            timestamp:e.timestamp
+          })
+        });
+        messages = null
+      }
+
+    })
+
+    // contact sockets
+    socket.on('block contact', (contact)=>{
+      if(!client.blocked.find(e=>e.name===contact)){
+        User.updateOne({_id:client._id}, {
+          blocked:[...client.blocked, contact]
+        }).exec()
+      }
+    })
+    socket.on('new contact', async (new_contact) => {
+      const details = await User.findOne({'username':new_contact})
+      if(details){
+        if(!client.contacts.find(e=>e.name===new_contact)){
           User.updateOne({_id:client._id}, {
-            blocked:[...client.blocked, contact]
+            contacts:[...client.contacts, {name:details.username, last:'Say hello...'}]
           }).exec()
         }
-      })
-      socket.on('new contact', async (new_contact) => {
-        const details = await User.findOne({'username':new_contact})
-        if(details){
-          if(client.username === new_contact){
-            socket.emit('contact is you')
-          }else{
-            if(!client.contacts.find(e=>e.name===new_contact) ){
-              User.updateOne({_id:client._id}, {
-                contacts:[...client.contacts, {name:details.username, last:'Say hello...'}]
-              }).exec()
-            }
-            socket.emit('contact approved', {name:details.username, last:'Say hello...'})
-          }
-        }
-        else{
-          socket.emit('contact nonexistent')
-        }
+        socket.emit('contact approved', {name:details.username, last:'Say hello...'})
       }
-      );
-      socket.on('burn contact', async (username) => {
-        console.log('burn ' + username)
-        User.updateOne({_id:client._id}, {
-          contacts:client.contacts.filter(e=>{
-            return e.name!=username
-          })
-        }).exec()
-      })
+      else{
+        socket.emit('contact nonexistent')
+      }
+    }
+    );
+    socket.on('burn contact', async (username) => {
+      User.updateOne({_id:client._id}, {
+        contacts:client.contacts.filter(e=>{
+          return e.name!=username
+        })
+      }).exec()
+    })
   }else{
     socket.emit('not logged in')
   }

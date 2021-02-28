@@ -6,11 +6,10 @@ import './chatBody.css'
 import Message from './Message'
 import NoChat from './NoChat'
 
-import bigPrime from './bigprime'
-
 function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   const [messages, setMessages] = useState([])
   const[input, setInput] = useState("")
+  const[bigPrime, setBigPrime] = useState()
   const[privateKey, setPrivateKey] = useState()
   const[publicKey, setPublicKey] = useState()
 
@@ -45,8 +44,27 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
     socket.emit('block contact', activeChat)
   }
 
+  const generatePrivateKey = async () =>{
+    const rnd = (Math.random() * 10 + 1)
+    const rndInt = Math.floor(rnd)
+    await setPrivateKey(rndInt)
+  }
+  const generatePublicKey = () =>{
+    const exp = Math.pow(2, privateKey)
+    const mod = exp%bigPrime;
+    setPublicKey(mod)
+  }
+  
   socket.on('incoming message', (message)=>{
     addMessageToState(message.msg, message.from, sessionStorage.getItem('username'), message.timestamp)
+  })
+  
+  socket.on('big prime', async (p)=>{
+    setBigPrime(13)
+    generatePrivateKey().then(()=>{
+      console.log(privateKey)
+      socket.emit("my public key", privateKey)
+    })
   })
 
   useEffect(() => {
@@ -68,8 +86,6 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
       })
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-
   if(activeChat){
     return (
       <div className="chat_body">

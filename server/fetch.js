@@ -19,6 +19,7 @@ export const sendMessages = async (token) =>{
       to:clientToken.for
     })
     if(unreadMessages){
+      console.log(unreadMessages)
       Messages.deleteMany({
         to:clientToken.for
       }).exec()

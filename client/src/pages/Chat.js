@@ -8,11 +8,11 @@ import io from 'socket.io-client'
 export default function Chat() {
   const [activeChat, setActiveChat]=useState()
   const [contacts, setContacts]=useState([])
+
   const [encryptionKeys, setEncryptionKeys]=useState([])
   const [sharedSecrets, setSharedSecrets]=useState([])
   const [socket, setSocket]=useState(io)
   socket.removeAllListeners()
-  
   const history = useHistory()
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function Chat() {
           token:sessionStorage.getItem('user_token')
           }
         })
-      )
+      )      
       fetch("http://localhost:4000/api/get_contacts",{
         method: 'POST',
         body:JSON.stringify({
@@ -64,7 +64,6 @@ export default function Chat() {
   }, [activeChat])
 
 
-  
   if(sessionStorage.getItem('user_token')){
     socket.on('not logged in', ()=>{
       sessionStorage.clear()
