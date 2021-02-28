@@ -49,9 +49,9 @@ socketio.on('connection', async (socket) => {
         const bob = clientConnections.find(e=>e.username===username)
         if(bob){
           const bobsKey = bob.publicKey
-          socket.emit('bobs public key', bobsKey)
+          socket.emit('bobs public key', bobsKey, bob.username)
         }else{
-          socket.emit('bobs public key', 'not online')
+          socket.emit('bobs public key', 'not online', bob.username)
         }
       })
       

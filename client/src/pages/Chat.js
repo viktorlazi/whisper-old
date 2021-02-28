@@ -65,14 +65,23 @@ export default function Chat() {
     return mod
   } 
 
+  const createSharedSecret = (prKey, pubKey) =>{
+    return 100
+  }
+
   useEffect(() => {
     if(activeChat){
       socket.emit('request public key', activeChat)
     }
   }, [activeChat])
   
-  socket.on('bobs public key', (key)=>{
-    alert(key)
+  socket.on('bobs public key', (key, username)=>{
+    // key is contacts public key
+    setSharedSecrets(sharedSecrets=>[...sharedSecrets, {
+      username:username,
+      secret:createSharedSecret(encryptionKey.private, key)
+    }])
+    alert()
   })
 
 
