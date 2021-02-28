@@ -110,6 +110,9 @@ export default function Chat() {
         <ChatBody 
           socket={socket} 
           activeChat={activeChat}
+          encryptionKey={
+            sharedSecrets.find(e=>e.username===activeChat)
+          }
           closeChat={()=>{setActiveChat(null)}}
           contacts={contacts}
           setContacts={setContacts}/>

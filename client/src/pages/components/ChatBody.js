@@ -5,11 +5,11 @@ import BlockIcon from '@material-ui/icons/Block';
 import './chatBody.css'
 import Message from './Message'
 import NoChat from './NoChat'
+import CryptoJS from 'crypto-js'
 
-function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
+function ChatBody({socket, activeChat, encryptionKey, contacts, setContacts, closeChat}) {
   const [messages, setMessages] = useState([])
   const[input, setInput] = useState("")
-  const[bigPrime, setBigPrime] = useState()
 
   const addMessageToState = (msg, sender, receiver, timestamp) =>{
     setMessages(
@@ -18,7 +18,7 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
         sender:sender,
         receiver:receiver,
         timestamp:timestamp
-      }],
+      }]
     )
   }
   const sendMessage = async(e)=>{
@@ -27,7 +27,8 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
       let now = new Date().getHours().toString() + ":"
         + new Date().getMinutes().toString();
       addMessageToState(input, sessionStorage.getItem('username'), activeChat, now)
-      socket.emit('new message', input, activeChat, now)
+      const encryptedMessage = CryptoJS.AES.encrypt(input, encryptionKey.toString()).toString()
+      socket.emit('new message', encryptedMessage, activeChat, now)
       setInput("")
     }
   }
@@ -43,7 +44,12 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
   }
   
   socket.on('incoming message', (message)=>{
-    addMessageToState(message.msg, message.from, sessionStorage.getItem('username'), message.timestamp)
+    addMessageToState(
+      CryptoJS.AES.decrypt(message.msg, encryptionKey.toString()).toString(CryptoJS.enc.Utf8),
+      message.from, 
+      sessionStorage.getItem('username'), 
+      message.timestamp
+    )
   })
 
   useEffect(() => {
@@ -65,6 +71,7 @@ function ChatBody({socket, activeChat, contacts, setContacts, closeChat}) {
       })
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+ 
   if(activeChat){
     return (
       <div className="chat_body">
