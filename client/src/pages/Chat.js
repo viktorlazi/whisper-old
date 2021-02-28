@@ -9,7 +9,7 @@ export default function Chat() {
   const [activeChat, setActiveChat]=useState()
   const [contacts, setContacts]=useState([])
   const [encryptionKeys, setEncryptionKeys]=useState([])
-  const [sharedSecret, setSharedSecret]=useState([])
+  const [sharedSecrets, setSharedSecrets]=useState([])
   const [socket, setSocket]=useState(io)
   socket.removeAllListeners()
   
@@ -51,55 +51,18 @@ export default function Chat() {
     return mod
   }
   const createSharedSecret = (prKey, pubKey) =>{
-    return prKey*pubKey
+    
   }
   const newEncryptionKeys = (username)=>{
-    if(encryptionKeys.length > 0){
-      if(encryptionKeys.map(e=>{
-        return e.username===username
-      }).length > 0){
-        return false
-      }
-    }
-    const prKey = 1; //
-    const pubKey = 2; //
-
-    return {
-      prKey, pubKey, username
-    }
+    
   }
 
   useEffect(() => {
     if(activeChat){
-      const newKeys = newEncryptionKeys(activeChat);
-      if(newKeys){
-        socket.emit('public_key', newKeys.pubKey, activeChat)
-        setEncryptionKeys(encryptionKeys=>[...encryptionKeys, newKeys]) 
-      }
+      
     }
   }, [activeChat])
 
-  socket.on('public key request', (username, pubKey)=>{
-    const bobsKey = encryptionKeys.find(e=>e.username===username)
-    if(bobsKey !== undefined){
-      const _sharedSecret = createSharedSecret(bobsKey.prKey, pubKey)
-      alert(_sharedSecret)    
-    }else{
-      const newKeys = newEncryptionKeys(username)
-      if(newKeys){
-        setEncryptionKeys(encryptionKeys=>[...encryptionKeys, newKeys]) 
-        setSharedSecret(createSharedSecret(newKeys.prKey, pubKey))
-        socket.emit('public_key', username, newKeys.pubKey)
-        console.log(sharedSecret)
-      }
-    }
-  })
-
-  socket.on("here is my public key", (username, pubKey)=>{
-    const bobsKey = encryptionKeys.find(e=>e.username===username)
-    setSharedSecret(createSharedSecret(bobsKey.prKey, pubKey))
-    console.log(sharedSecret)
-  })
 
   
   if(sessionStorage.getItem('user_token')){

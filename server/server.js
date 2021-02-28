@@ -42,18 +42,7 @@ socketio.on('connection', async (socket) => {
       const client = await User.findOne({'username':clientToken.for})
       clientConnections.push({username:client.username, id: socket})
       
-      socket.on('public_key', (pub_key, username)=>{
-        const bobSocket = clientConnections.find(e=>e.username===username)
-        if(bobSocket){
-          bobSocket.id.emit('public key request', client.username, pub_key)
-        }
-      })
-      socket.on('got a secret', (username, pub_key) =>{
-        const bobSocket = clientConnections.find(e=>e.username===username)
-        if(bobSocket){
-          bobSocket.id.emit('here is my public key', client.username, pub_key)
-        }
-      })
+     
       
       // messages sockets
       socket.on('new message', (msg, to, timestamp)=>{
