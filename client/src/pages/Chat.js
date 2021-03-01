@@ -75,7 +75,6 @@ export default function Chat() {
     const _pubKey = bigInt(pubKey)
     const prime = bigInt('0x' + bigPrime)
     const secret = _pubKey.modPow(_prKey, prime)
-    alert(secret)
     return secret
   }
 
@@ -86,11 +85,13 @@ export default function Chat() {
   }, [activeChat])
   
   socket.on('bobs public key', (key, username)=>{
-    // key is contacts public key
-    setSharedSecrets(sharedSecrets=>[...sharedSecrets, {
-      username:username,
-      secret:createSharedSecret(encryptionKey.private, key)
-    }])
+    if(key !== 'not online'){
+      // key is contacts public key
+      setSharedSecrets(sharedSecrets=>[...sharedSecrets, {
+        username:username,
+        secret:createSharedSecret(encryptionKey.private, key)
+      }])
+    }
   })
 
 

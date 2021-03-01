@@ -50,7 +50,7 @@ socketio.on('connection', async (socket) => {
           const bobsKey = bob.publicKey
           socket.emit('bobs public key', bobsKey, bob.username)
         }else{
-          socket.emit('bobs public key', 'not online', bob.username)
+          socket.emit('bobs public key', 'not online', username)
         }
       })
       
